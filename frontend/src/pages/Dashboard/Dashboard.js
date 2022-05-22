@@ -12,11 +12,12 @@ import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import {mainListItems} from './ListItems';
+import {mainListItems} from './SideMenuItems';
 import InfoIcon from '@mui/icons-material/InfoOutlined'
 import Button from "@mui/material/Button";
 import AddIcon from '@mui/icons-material/Add'
 import UserMenu from "../../components/UserMenu/UserMenu";
+import SystemsList from "../../components/SystemsList/SystemsList";
 
 const drawerWidth = 240;
 
@@ -155,9 +156,8 @@ function DashboardContent() {
                                 </Button>
                             </Grid>
                             {/* systems list */}
-                            <Grid item xs={12}>
-                                {/* todo add projects list card component */}
-                            </Grid>
+                            {/* todo add projects list card component */}
+                            <SystemsList/>
                         </Grid>
                     </Container>
                 </Box>
