@@ -1,25 +1,24 @@
-import logo from './logo.svg';
+import React, {Component} from "react";
 import './App.css';
+import {Routes, Route,} from 'react-router-dom';
+import Dashboard from "./pages/Dashboard/Dashboard";
+import Footer from "./components/Footer/Footer"
+import Login from "./pages/Login/Login";
+import CssBaseline from "@mui/material/CssBaseline";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends Component {
+    render() {
+        return (
+            <div className="App">
+                <CssBaseline/>
+                <Routes>
+                    <Route path="/" element={<Login/>}/>
+                    <Route path="/dashboard" element={<Dashboard/>}/>
+                </Routes>
+                <Footer/>
+            </div>
+        );
+    }
 }
 
 export default App;
