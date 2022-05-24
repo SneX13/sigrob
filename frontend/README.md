@@ -2,6 +2,18 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+### Prerequisite
+
+[Node.js](https://nodejs.org/en/)
+
+### Dependencies
+
+React 18 \
+React-router-dom 6 \
+React-redux 8 \
+axios 0.27.2 \
+mui 5.8.0
+
 ## Available Scripts
 
 In the project directory, you can run:
