@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from "react";
-import SystemDataService from "../../services/api";
+import DataService from "../../services/api";
 import Card from "./SystemCard";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
@@ -12,7 +12,7 @@ export default function SystemsList() {
     }, []);
 
     const getSystems = () => {
-        SystemDataService.getAll()
+        DataService.getAllSystems()
             .then(response => {
                 setSystems(response.data);
             })

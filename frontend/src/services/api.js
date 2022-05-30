@@ -1,25 +1,34 @@
 import http from "../api-common";
 
-class SystemDataService {
-    getAll() {
+class DataService {
+    getAllSystems() {
         return http.get("/systems");
     }
 
-    get(id) {
+    getSystem(id) {
         return http.get(`/systems/${id}`);
     }
 
-    create(data) {
+    createSystem(data) {
         return http.post("/systems", data);
     }
 
-    update(id, data) {
+    updateSystem(id, data) {
         return http.put(`/systems/${id}`, data);
     }
 
-    delete(id) {
+    deleteSystem(id) {
         return http.delete(`/systems/${id}`);
     }
+
+    getAllUsers() {
+        return http.get("/users");
+    }
+
+    getUser(id) {
+        return http.get(`/users/${id}`);
+    }
+
 }
 
-export default new SystemDataService();
+export default new DataService();

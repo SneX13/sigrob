@@ -18,6 +18,11 @@ import Button from "@mui/material/Button";
 import AddIcon from '@mui/icons-material/Add'
 import UserMenu from "../../components/UserMenu/UserMenu";
 import SystemsList from "../../components/SystemsList/SystemsList";
+import {useEffect, useState} from "react";
+import DataService from "../../services/api";
+
+
+
 
 const drawerWidth = 240;
 
@@ -71,6 +76,21 @@ function DashboardContent() {
     const [open, setOpen] = React.useState(true);
     const toggleDrawer = () => {
         setOpen(!open);
+    };
+    const [users, setUsers] = useState([]);
+
+    useEffect(() => {
+        getUsers();
+    }, []);
+
+    const getUsers = () => {
+        DataService.getAllUsers()
+            .then(response => {
+                setUsers(response.data);
+            })
+            .catch(e => {
+                console.log(e);
+            });
     };
 
     return (
