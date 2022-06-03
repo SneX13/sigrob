@@ -5,6 +5,7 @@ import Dashboard from "./pages/Dashboard/Dashboard";
 import Footer from "./components/Footer/Footer"
 import Login from "./pages/Login/Login";
 import CssBaseline from "@mui/material/CssBaseline";
+import NewSystem from "./pages/CreateSystem/NewSystem";
 
 class App extends Component {
     render() {
@@ -14,6 +15,7 @@ class App extends Component {
                 <Routes>
                     <Route path="/" element={<Login/>}/>
                     <Route path="/dashboard" element={<Dashboard/>}/>
+                    <Route path="/new-system" element={<NewSystem/>}/>
                 </Routes>
                 <Footer/>
             </div>
