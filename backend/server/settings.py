@@ -35,7 +35,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'backend.apps.BackendConfig',
+    'backend.server.apps.ServerConfig',
     'rest_framework',
     'corsheaders'
 ]
@@ -53,7 +53,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'sigrob.urls'
+ROOT_URLCONF = 'backend.server.urls'
 
 TEMPLATES = [
     {
@@ -72,7 +72,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'sigrob.wsgi.application'
+WSGI_APPLICATION = 'backend.server.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases

@@ -3,8 +3,8 @@ from django.http.response import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.parsers import JSONParser
 
-from backend.models import Users
-from backend.serializers import UserSerializer
+from backend.app.models import Users
+from backend.app.serializers import UserSerializer
 
 
 @csrf_exempt
