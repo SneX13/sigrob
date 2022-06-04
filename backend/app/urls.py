@@ -1,6 +1,6 @@
 from django.urls import re_path
 
-from backend.app import views
+from . import views
 
 urlpatterns = [
     re_path(r'^users$', views.user_table_methods),

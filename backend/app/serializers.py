@@ -1,9 +1,9 @@
 from rest_framework import serializers
 
-from backend.app.models import Users
+from .models import User
 
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Users
-        fields = ('UserId', 'Email', 'UserName', 'Password', 'UserRole')
+        model = User
+        fields = ('id', 'name', 'email', 'password', 'company', 'is_admin')
