@@ -1,8 +1,8 @@
-from django.urls import re_path
+from django.urls import path
 
 from . import views
 
 urlpatterns = [
-    re_path(r'^users/$', views.user_table_methods),
-    re_path(r'^users/([0-9]+)/$', views.user_table_methods)
+    path('users/', views.UserTable.as_view()),
+    path('users/<int:id_>/', views.UserTable.as_view())
 ]
