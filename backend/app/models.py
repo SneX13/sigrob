@@ -10,7 +10,7 @@ class Company(models.Model):
 
 class User(models.Model):
     name = models.CharField(max_length=255)
-    email = models.EmailField(max_length=255)
+    email = models.EmailField(max_length=255, unique=True)
     password = models.CharField(max_length=255)
     company = models.ForeignKey(Company, models.CASCADE, to_field='name')
     is_admin = models.BooleanField()

@@ -1,45 +1,31 @@
+from django import http
 from django.core.handlers.wsgi import WSGIRequest
 from rest_framework.parsers import JSONParser
-from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from .models import User
-from .serializers import UserSerializer
 
 
-class UserTable(APIView):
-    @staticmethod
-    def get(request: WSGIRequest, id_: int = None):
-        if id_ is None:
-            users = User.objects.all()
-        else:
-            try:
-                users = [User.objects.get(id=id_)]
-            except User.DoesNotExist:
-                return Response("User does not exist")
-        users_serializer = UserSerializer(users, many=True)
-        return Response(users_serializer.data)
-
+class LoginAttempt(APIView):
     @staticmethod
     def post(request: WSGIRequest):
-        user_data = JSONParser().parse(request)
-        users_serializer = UserSerializer(data=user_data)
-        if users_serializer.is_valid():
-            users_serializer.save()
-        return Response("Added Successfully")
-
-    @staticmethod
-    def put(request: WSGIRequest):
-        user_data = JSONParser().parse(request)
-        user = User.objects.get(id=user_data['id'])
-        users_serializer = UserSerializer(user, data=user_data)
-        if users_serializer.is_valid():
-            users_serializer.save()
-            return Response("Updated Successfully")
-        return Response("Failed to update")
-
-    @staticmethod
-    def delete(request: WSGIRequest, id_: str = None):
-        user = User.objects.get(id=id_)
-        user.delete()
-        return Response("Deleted Successfully")
+        login_data = JSONParser().parse(request)
+        if "email" not in login_data or "password" not in login_data:
+            return http.HttpResponseBadRequest(
+                "Login request should contain email and password fields"
+            )
+        email = login_data["email"]
+        try:
+            user = User.objects.get(email=email)
+        except User.DoesNotExist:
+            return http.HttpResponse(
+                "User email does not exist in database"
+            )
+        if login_data["password"] == user.password:
+            return http.HttpResponse(
+                "Login successful"
+            )
+        else:
+            return http.HttpResponse(
+                "Incorrect password"
+            )
