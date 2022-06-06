@@ -1,4 +1,4 @@
-import http from "../api-common";
+import http from "./api-common";
 
 class DataService {
     getAllSystems() {

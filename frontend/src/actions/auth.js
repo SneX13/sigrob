@@ -6,6 +6,11 @@ import {
 } from "./types";
 import AuthService from "../services/auth.service";
 
+/* Login calls the AuthService.login with email and password parameters to make asynchronous HTTP requests,
+if successful dispatch LOGIN_SUCCESS and SET_MESSAGE
+on failed dispatch LOGIN_FAIL and SET_MESSAGE
+A Promise is returned for components that are using it. */
+
 export const login = (email, password) => (dispatch) => {
     return AuthService.login(email, password).then(
         (data) => {
@@ -33,6 +38,7 @@ export const login = (email, password) => (dispatch) => {
         }
     );
 };
+//todo: add successful logout notification
 export const logout = () => (dispatch) => {
     AuthService.logout();
     dispatch({

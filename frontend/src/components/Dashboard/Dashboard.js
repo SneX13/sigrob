@@ -12,12 +12,12 @@ import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import {mainListItems} from './SideMenuItems';
+import {mainListItems} from './AdminSideMenuItems';
 import InfoIcon from '@mui/icons-material/InfoOutlined'
 import Button from "@mui/material/Button";
 import AddIcon from '@mui/icons-material/Add'
-import UserMenu from "../../components/UserMenu/UserMenu";
-import SystemsList from "../../components/SystemsList/SystemsList";
+import UserMenu from "../UserMenu/UserMenu";
+import SystemsList from "../SystemsList/SystemsList";
 import {useEffect, useState} from "react";
 import DataService from "../../services/api";
 

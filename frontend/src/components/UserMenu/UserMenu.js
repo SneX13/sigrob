@@ -11,8 +11,9 @@ import Settings from '@mui/icons-material/Settings';
 import Logout from '@mui/icons-material/Logout';
 import UserIcon from '@mui/icons-material/PersonOutlineOutlined';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import {logout} from "../../actions/auth";
 
-export default function UserMenu() {
+export default function UserMenu(props) {
     const [anchorEl, setAnchorEl] = React.useState(null);
     const open = Boolean(anchorEl);
     const handleClick = (event) => {
@@ -21,6 +22,11 @@ export default function UserMenu() {
     const handleClose = () => {
         setAnchorEl(null);
     };
+    this.logOut = this.logOut.bind(this);
+    const logOut = () =>{
+        this.props.dispatch(logout());
+        history.push("/login");
+    }
     return (
         <React.Fragment>
             <Box sx={{display: 'flex', alignItems: 'center', textAlign: 'center'}}>
@@ -90,7 +96,7 @@ export default function UserMenu() {
                     </ListItemIcon>
                     Settings & Preferences
                 </MenuItem>
-                <MenuItem>
+                <MenuItem onClick={logOut}>
                     {/* todo: logout the user */}
                     <ListItemIcon>
                         <Logout fontSize="small"/>

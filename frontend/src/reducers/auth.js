@@ -1,3 +1,4 @@
+/* The Auth reducer updates the isLoggedIn and user state of the application.  */
 import {
     LOGIN_SUCCESS,
     LOGIN_FAIL,

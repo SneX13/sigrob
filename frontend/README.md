@@ -12,7 +12,11 @@ React 18 \
 React-router-dom 6 \
 React-redux 8 \
 axios 0.27.2 \
-mui 5.8.0
+mui 5.8.0 \
+redux  4.2.0 \
+redux-thunk 2.4.1 \
+react-validation 3.0.7 \
+
 
 ## Available Scripts
 
