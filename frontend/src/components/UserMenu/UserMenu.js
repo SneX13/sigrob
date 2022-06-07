@@ -11,7 +11,8 @@ import Settings from '@mui/icons-material/Settings';
 import Logout from '@mui/icons-material/Logout';
 import UserIcon from '@mui/icons-material/PersonOutlineOutlined';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import {logout} from "../../actions/auth";
+import AuthService from "../../services/auth.service";
+import {useNavigate} from "react-router-dom";
 
 export default function UserMenu(props) {
     const [anchorEl, setAnchorEl] = React.useState(null);
@@ -22,10 +23,11 @@ export default function UserMenu(props) {
     const handleClose = () => {
         setAnchorEl(null);
     };
-    this.logOut = this.logOut.bind(this);
-    const logOut = () =>{
-        this.props.dispatch(logout());
-        history.push("/login");
+    const navigate = useNavigate();
+
+    const logOut = () => {
+        AuthService.logout()
+        navigate("/login");
     }
     return (
         <React.Fragment>
@@ -42,7 +44,7 @@ export default function UserMenu(props) {
                         aria-haspopup="true"
                         aria-expanded={open ? 'true' : undefined}
                     >
-                        <Avatar sx={{width: 32, height: 32}} >
+                        <Avatar sx={{width: 32, height: 32}}>
                             <UserIcon/>
                         </Avatar>
                     </IconButton>
@@ -91,13 +93,13 @@ export default function UserMenu(props) {
                     Logged in as User Role
                 </MenuItem>
                 <MenuItem>
+                    {/* Functionalities for this not included in this app version */}
                     <ListItemIcon>
                         <Settings fontSize="small"/>
                     </ListItemIcon>
                     Settings & Preferences
                 </MenuItem>
                 <MenuItem onClick={logOut}>
-                    {/* todo: logout the user */}
                     <ListItemIcon>
                         <Logout fontSize="small"/>
                     </ListItemIcon>
