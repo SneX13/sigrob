@@ -3,8 +3,8 @@ from django.contrib.auth import authenticate, login, logout
 from rest_framework.parsers import JSONParser
 from rest_framework.views import APIView
 
-from backend.app.models import System, User
-from backend.app.serializers import SystemSerializer
+from .models import System, User
+from .serializers import SystemSerializer
 
 
 class LoginAttempt(APIView):
