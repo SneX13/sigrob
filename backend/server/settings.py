@@ -35,9 +35,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'server.apps.ServerConfig',
     'rest_framework',
     'corsheaders',
+    'app',
 ]
 
 CORS_ORIGIN_ALLOW_ALL = True
