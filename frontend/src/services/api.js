@@ -2,33 +2,32 @@ import http from "./api-common";
 
 class DataService {
     getAllSystems() {
-        return http.get("/systems");
+        return http.get("/systems/");
     }
 
     getSystem(id) {
-        return http.get(`/systems/${id}`);
+        return http.get(`/systems/${id}/`);
     }
 
     createSystem(data) {
-        return http.post("/systems", data);
+        return http.post("/systems/", data);
     }
 
     updateSystem(id, data) {
-        return http.put(`/systems/${id}`, data);
+        return http.put(`/systems/${id}/`, data);
     }
 
     deleteSystem(id) {
-        return http.delete(`/systems/${id}`);
+        return http.delete(`/systems/${id}/`);
     }
 
     getAllUsers() {
-        return http.get("/users");
+        return http.get("/users/");
     }
 
     getUser(id) {
-        return http.get(`/users/${id}`);
+        return http.get(`/users/${id}/`);
     }
-
 }
 
 export default new DataService();

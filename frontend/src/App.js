@@ -1,59 +1,46 @@
-import React, {Component} from "react";
+import React from "react";
 import './App.css';
 import {Routes, Route,} from 'react-router-dom';
-
-import Footer from "./components/Footer/Footer"
-import Login from "./pages/Login/Login";
-import CssBaseline from "@mui/material/CssBaseline";
-import { connect } from "react-redux";
-
-import { clearMessage } from "./actions/message";
-import { history } from './helpers/history';
 import AdminDashboard from "./pages/Dashboard/AdminDashboard";
 import UserDashboard from "./pages/Dashboard/UserDashboard";
+import Layout from "./components/Layout";
+import Login from "./pages/Login/Login";
+import Lounge from "./components/Lounge";
+import PageNotFound from "./components/PageNotFound";
+import RequireAuth from "./components/RequireAuth";
+import Unauthorized from "./components/Unauthorized";
 
-class App extends Component {
-    constructor(props) {
-        super(props);
-
-        this.state = {
-            showUserBoard: false,
-            showAdminBoard: false,
-            currentUser: undefined,
-        };
-        history.listen((location) => {
-            props.dispatch(clearMessage()); // clear message when changing location
-        });
-    }
-    componentDidMount() {
-        const user = this.props.user;
-        if (user) {
-            this.setState({
-                currentUser: user,
-                showUserBoard: user.UserRole.includes("User"),
-                showAdminBoard: user.UserRole.includes("Admin"),
-            });
-        }
-    }
-
-    render() {
-        return (
-            <div className="App">
-                <CssBaseline/>
-                <Routes>
-                    <Route path="/" element={this.state.currentUser ? <AdminDashboard/>: <Login/>}/>
-                    <Route path="/admin-dashboard" element={<AdminDashboard/>}/>
-                    <Route path="/user-dashboard" element={<UserDashboard/>}/>
-                </Routes>
-                <Footer/>
-            </div>
-        );
-    }
+const ROLES = {
+    'User': 2001,
+    'Editor': 1984,
+    'Admin': 5150
 }
-function mapStateToProps(state) {
-    const { user } = state.auth;
-    return {
-        user,
-    };
+
+function App() {
+    return (
+        <Routes>
+            <Route path="/" element={<Layout/>}>
+                {/* public routes */}
+                <Route path="login" element={<Login/>}/>
+                <Route path="unauthorized" element={<Unauthorized/>}/>
+
+                {/* we want to protect these routes */}
+                <Route element={<RequireAuth allowedRoles={[ROLES.Admin]}/>}>
+                    <Route path="admin" element={<AdminDashboard/>}/>
+                </Route>
+                <Route element={<RequireAuth allowedRoles={[ROLES.Editor]}/>}>
+                    <Route path="editor" element={<UserDashboard/>}/>
+                </Route>
+
+                <Route element={<RequireAuth allowedRoles={[ROLES.Editor, ROLES.Admin]}/>}>
+                    <Route path="lounge" element={<Lounge/>}/>
+                </Route>
+
+                {/* catch all */}
+                <Route path="*" element={<PageNotFound/>}/>
+            </Route>
+        </Routes>
+    );
 }
-export default connect(mapStateToProps)(App);
+
+export default App;
