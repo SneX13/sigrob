@@ -1,5 +1,6 @@
 from django import http
 from django.contrib.auth import authenticate, login, logout
+from django.core import serializers
 from rest_framework.parsers import JSONParser
 from rest_framework.views import APIView
 
@@ -17,17 +18,16 @@ class LoginAttempt(APIView):
             )
         email, password = login_data["email"], login_data["password"]
         try:
-            User.objects.get(email=email)
+            user = User.objects.get(email=email)
         except User.DoesNotExist:
             return http.HttpResponse(
                 f"User with email '{email}' does not exist in database."
             )
-        user = authenticate(request, email=email, password=password)
-        if user is not None:
-            login(request, user)
-            return http.HttpResponse(
-                f"Login successful for user '{email}'."
-            )
+        authenticated_user = authenticate(request, email=email, password=password)
+        if authenticated_user is not None:
+            login(request, authenticated_user)
+            user_data = serializers.serialize("json", [user])
+            return http.HttpResponse(user_data)
         else:
             return http.HttpResponse(
                 f"Wrong password for email '{email}'."
