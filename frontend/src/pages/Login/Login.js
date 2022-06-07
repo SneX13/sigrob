@@ -37,7 +37,7 @@ const Login = () => {
         try {
             const response = AuthService.login(email, password)
             console.log(JSON.stringify(response?.data));
-            //console.log(JSON.stringify(response));
+            console.log(JSON.stringify(response));
             const accessToken = response?.data?.accessToken;
             const roles = response?.data?.roles;
             setAuth({email, password, roles, accessToken});
