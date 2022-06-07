@@ -19,7 +19,7 @@ class LoginAttempt(APIView):
         try:
             User.objects.get(email=email)
         except User.DoesNotExist:
-            return http.HttpResponseBadRequest(
+            return http.HttpResponse(
                 f"User with email '{email}' does not exist in database."
             )
         user = authenticate(request, email=email, password=password)
@@ -46,7 +46,7 @@ class Logout(APIView):
         try:
             User.objects.get(email=email)
         except User.DoesNotExist:
-            return http.HttpResponseBadRequest(
+            return http.HttpResponse(
                 f"User with email '{email}' does not exist in database."
             )
         logout(request)
@@ -67,7 +67,7 @@ class GetSystems(APIView):
         try:
             user = User.objects.get(email=email)
         except User.DoesNotExist:
-            return http.HttpResponseBadRequest(
+            return http.HttpResponse(
                 f"User with email '{email}' does not exist in database."
             )
         super_user = User.objects.get(is_superuser=True)
