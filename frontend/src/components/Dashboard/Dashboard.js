@@ -21,9 +21,6 @@ import SystemsList from "../SystemsList/SystemsList";
 import {useEffect, useState} from "react";
 import DataService from "../../services/api";
 
-
-
-
 const drawerWidth = 240;
 
 const AppBar = styled(MuiAppBar, {
@@ -72,7 +69,7 @@ const Drawer = styled(MuiDrawer, {shouldForwardProp: (prop) => prop !== 'open'})
 
 const mdTheme = createTheme();
 
-function DashboardContent() {
+export default function Dashboard(props) {
     const [open, setOpen] = React.useState(true);
     const toggleDrawer = () => {
         setOpen(!open);
@@ -93,10 +90,11 @@ function DashboardContent() {
             });
     };
 
+
     return (
         <ThemeProvider theme={mdTheme}>
             <Box sx={{display: 'flex'}}>
-                <AppBar position="absolute" open={open}>
+                <AppBar position="absolute" open={props.isAdmin ? open : !open}>
                     <Toolbar
                         sx={{
                             pr: '24px', // keep right padding when drawer closed
@@ -121,29 +119,31 @@ function DashboardContent() {
                             noWrap
                             sx={{flexGrow: 1}}
                         >
-                            Admin Dashboard
+                            {props.name}
                         </Typography>
                         <UserMenu/>
                     </Toolbar>
                 </AppBar>
-                <Drawer variant="permanent" open={open}>
-                    <Toolbar
-                        sx={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'flex-end',
-                            px: [1],
-                        }}
-                    >
-                        <IconButton onClick={toggleDrawer}>
-                            <ChevronLeftIcon/>
-                        </IconButton>
-                    </Toolbar>
-                    <Divider/>
-                    <List component="nav">
-                        {mainListItems}
-                    </List>
-                </Drawer>
+                {props.isAdmin &&
+                    <Drawer variant="permanent" open={open}>
+                        <Toolbar
+                            sx={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'flex-end',
+                                px: [1],
+                            }}
+                        >
+                            <IconButton onClick={toggleDrawer}>
+                                <ChevronLeftIcon/>
+                            </IconButton>
+                        </Toolbar>
+                        <Divider/>
+                        <List component="nav">
+                            {mainListItems}
+                        </List>
+                    </Drawer>
+                }
                 <Box
                     component="main"
                     sx={{
@@ -152,32 +152,34 @@ function DashboardContent() {
                                 ? theme.palette.grey[100]
                                 : theme.palette.grey[900],
                         flexGrow: 1,
-                        height: '100vh',
+                        paddingTop: '100px',
                         overflow: 'auto',
                     }}
                 >
-                    <Toolbar/>
                     <Container maxWidth="lg" sx={{mt: 4, mb: 4}}>
                         <Grid container spacing={3}>
-                            {/*  if there is no system */}
-                            <Grid item xs={12}>
-                                <InfoIcon/>
-                                <Typography variant="body1" gutterBottom>
-                                    There is no system to show. <br/>
-                                    To create one, click on the Create New System button below.
-                                </Typography>
-                                <Button
-                                    // onClick={openModal}
-                                    variant="contained"
-                                    sx={{mt: 3, mb: 2}}
-                                    startIcon={<AddIcon/>}
-                                >
-                                    Create New System
-                                </Button>
-                            </Grid>
+                            {props.isAdmin &&
+
+                                <Grid item xs={12}>
+                                    {/*  if there is no system */}
+                                    <InfoIcon/>
+                                    <Typography variant="body1" gutterBottom>
+                                        There is no system to show. <br/>
+                                        To create one, click on the Create New System button below.
+                                    </Typography>
+                                    <Button
+                                        // onClick={openModal}
+                                        variant="contained"
+                                        sx={{mt: 3, mb: 2}}
+                                        startIcon={<AddIcon/>}
+                                    >
+                                        Create New System
+                                    </Button>
+                                </Grid>
+                            }
                             {/* systems list */}
                             {/* todo add projects list card component */}
-                            <SystemsList/>
+                            <SystemsList admin={props.isAdmin}/>
                         </Grid>
                     </Container>
                 </Box>
@@ -186,6 +188,7 @@ function DashboardContent() {
     );
 }
 
+/*
 export default function Dashboard() {
     return <DashboardContent/>;
-}
+}*/

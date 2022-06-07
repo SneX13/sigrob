@@ -12,16 +12,15 @@ import NotificationIcon from '@mui/icons-material/NotificationsNoneOutlined';
 import Button from "@mui/material/Button";
 import {Skeleton, Stack} from "@mui/material";
 
-export default function SystemCard(system) {
-    const {id, name, subtitle, description, img} = system;
+export default function SystemCard(props) {
 
     /*todo write this function*/
     const updateSystem = (id) => {
-      //
+        //
     };
 
     const deleteSystem = (id) => {
-    //
+        //
     };
 
     return (
@@ -32,7 +31,7 @@ export default function SystemCard(system) {
                 avatar={
                     <Avatar/>
                 }
-                title="System Name"
+                title={props.system.name}
                 subheader="Subtitle"
             />
             <CardMedia>
@@ -46,10 +45,12 @@ export default function SystemCard(system) {
                     Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.
                 </Typography>
             </CardContent>
-            <CardActions>
-                <Button size="small" onClick={() => updateSystem(id)}>Edit</Button>
-                <Button size="small" onClick={() => deleteSystem(id)}>Delete</Button>
-            </CardActions>
+            {props.admin &&
+                <CardActions>
+                    <Button size="small" onClick={() => updateSystem(props.id)}>Edit</Button>
+                    <Button size="small" onClick={() => deleteSystem(props.id)}>Delete</Button>
+                </CardActions>
+            }
         </Card>
     );
 }

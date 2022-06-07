@@ -1,9 +1,10 @@
 import React from "react";
+import Dashboard from "../../components/Dashboard/Dashboard";
 
 const UserDashboard = () => {
 
     return (
-        <h1>Editors Page</h1>
+        <Dashboard name="User Dashboard" isAdmin={false}/>
     );
 };
 export default UserDashboard;

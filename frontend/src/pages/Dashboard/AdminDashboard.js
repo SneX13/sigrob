@@ -1,9 +1,11 @@
 import React, {useState, useEffect} from "react";
 import UserService from '../../services/user.service';
+import Box from "@mui/material/Box";
+import Dashboard from "../../components/Dashboard/Dashboard";
 
 const AdminDashboard = () => {
     return (
-        <h1>Admins Page</h1>
+        <Dashboard name="Admin Dashboard" isAdmin={true}/>
     );
 };
 export default AdminDashboard;
