@@ -1,9 +1,9 @@
 from django.urls import path
 
-from . import views
+from .views import authorization, system
 
 urlpatterns = [
-    path('login/', views.LoginAttempt.as_view()),
-    path('logout/', views.Logout.as_view()),
-    path('systems/', views.SystemTable.as_view()),
+    path('login/', authorization.LoginAttempt.as_view()),
+    path('logout/', authorization.Logout.as_view()),
+    path('systems/', system.SystemTable.as_view()),
 ]
