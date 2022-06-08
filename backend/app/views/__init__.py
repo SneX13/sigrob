@@ -1,1 +1,1 @@
-from . import authorization, system
+from . import authorization, system, component

@@ -84,5 +84,5 @@ class SystemTable(APIView):
         deleted_system_name = system.name
         system.delete()
         return http.HttpResponse(
-            f"Successfully deleted system {deleted_system_name}."
+            f"Successfully deleted system '{deleted_system_name}'."
         )

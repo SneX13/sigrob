@@ -79,7 +79,7 @@ class System(models.Model):
 
 class Component(models.Model):
     name = models.CharField(max_length=255)
-    system = models.OneToOneField(System, models.CASCADE)
+    system = models.ForeignKey(System, models.CASCADE)
 
     def __str__(self):
         return f'{self.system} | {self.name} {self.id}'
