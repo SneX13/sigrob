@@ -1,5 +1,6 @@
 from django import http
 from rest_framework.parsers import JSONParser
+from rest_framework.renderers import JSONRenderer
 from rest_framework.views import APIView
 
 from ..models import Component
@@ -17,7 +18,8 @@ class ComponentTable(APIView):
         system = component_data["system"]
         components = Component.objects.filter(system=system)
         component_serializer = ComponentSerializer(components, many=True)
-        return http.HttpResponse(component_serializer.data)
+        json_data = JSONRenderer().render(component_serializer.data)
+        return http.HttpResponse(json_data)
 
     @staticmethod
     def post(request: http.HttpRequest) -> http.HttpResponse:

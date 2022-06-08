@@ -1,5 +1,6 @@
 from django import http
 from rest_framework.parsers import JSONParser
+from rest_framework.renderers import JSONRenderer
 from rest_framework.views import APIView
 
 from ..models import User, System
@@ -24,12 +25,11 @@ class SystemTable(APIView):
         super_user = User.objects.get(is_superuser=True)
         if user.company.name == super_user.company.name:
             systems = System.objects.all()
-            systems_serializer = SystemSerializer(systems, many=True)
-            return http.HttpResponse(systems_serializer.data)
         else:
             systems = System.objects.filter(company=user.company)
-            systems_serializer = SystemSerializer(systems, many=True)
-            return http.HttpResponse(systems_serializer.data)
+        systems_serializer = SystemSerializer(systems, many=True)
+        json_data = JSONRenderer().render(systems_serializer.data)
+        return http.HttpResponse(json_data)
 
     @staticmethod
     def post(request: http.HttpRequest) -> http.HttpResponse:
