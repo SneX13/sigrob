@@ -1,9 +1,10 @@
 from django.urls import path
 
-from . import views
+from .views import authorization, system, component
 
 urlpatterns = [
-    path('login/', views.LoginAttempt.as_view()),
-    path('logout/', views.Logout.as_view()),
-    path('systems/', views.GetSystems.as_view()),
+    path('login/', authorization.LoginAttempt.as_view()),
+    path('logout/', authorization.Logout.as_view()),
+    path('systems/', system.SystemTable.as_view()),
+    path('components/', component.ComponentTable.as_view())
 ]
