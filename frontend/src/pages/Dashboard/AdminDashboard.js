@@ -1,6 +1,4 @@
-import React, {useState, useEffect} from "react";
-import UserService from '../../services/user.service';
-import Box from "@mui/material/Box";
+import React from "react";
 import Dashboard from "../../components/Dashboard/Dashboard";
 
 const AdminDashboard = () => {

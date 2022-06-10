@@ -5,7 +5,6 @@ import AdminDashboard from "./pages/Dashboard/AdminDashboard";
 import UserDashboard from "./pages/Dashboard/UserDashboard";
 import Layout from "./components/Layout";
 import Login from "./pages/Login/Login";
-import Lounge from "./components/Lounge";
 import PageNotFound from "./components/PageNotFound";
 import RequireAuth from "./components/RequireAuth";
 import Unauthorized from "./components/Unauthorized";
@@ -24,19 +23,15 @@ function App() {
                 <Route path="login" element={<Login/>}/>
                 <Route path="unauthorized" element={<Unauthorized/>}/>
 
-                {/* we want to protect these routes */}
+                {/* protect routes */}
                 <Route element={<RequireAuth allowedRoles={[ROLES.Admin]}/>}>
-                    <Route path="admin" element={<AdminDashboard/>}/>
+                    <Route path="admin-dashboard" element={<AdminDashboard/>}/>
                 </Route>
-                <Route element={<RequireAuth allowedRoles={[ROLES.Editor]}/>}>
-                    <Route path="editor" element={<UserDashboard/>}/>
-                </Route>
-
-                <Route element={<RequireAuth allowedRoles={[ROLES.Editor, ROLES.Admin]}/>}>
-                    <Route path="lounge" element={<Lounge/>}/>
+                <Route element={<RequireAuth allowedRoles={[ROLES.Admin, ROLES.Editor]}/>}>
+                    <Route path="user-dashboard" element={<UserDashboard/>}/>
                 </Route>
 
-                {/* catch all */}
+                {/* catch all missing routes */}
                 <Route path="*" element={<PageNotFound/>}/>
             </Route>
         </Routes>
