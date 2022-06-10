@@ -7,7 +7,7 @@ from django.urls import include, path
 urlpatterns = [
     # path('token-auth/', obtain_jwt_token),
     path('admin/', admin.site.urls),
-    path('api/', include("app.urls")),
+    path('', include("app.urls")),
     # path('', include('app.urls')),
 ]
 

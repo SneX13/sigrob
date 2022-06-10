@@ -1,26 +1,11 @@
 from django import http
 from django.contrib.auth import authenticate, login, logout
-from rest_framework.decorators import api_view
 from rest_framework.parsers import JSONParser
-from rest_framework.response import Response
+from rest_framework.renderers import JSONRenderer
 from rest_framework.views import APIView
-from rest_framework_simplejwt.views import TokenObtainPairView
 
 from ..models import User
-from ..serializers import MyTokenObtainPairSerializer
-
-
-class MyTokenObtainPairView(TokenObtainPairView):
-    serializer_class = MyTokenObtainPairSerializer
-
-
-@api_view(['GET'])
-def get_routes(request):
-    routes = [
-        'api/token/',
-        '/api/token/refresh'
-    ]
-    return Response(routes)
+from ..serializers import UserSerializer
 
 
 class LoginAttempt(APIView):
@@ -41,9 +26,11 @@ class LoginAttempt(APIView):
         user = authenticate(request, email=email, password=password)
         if user is not None:
             login(request, user)
-            return http.HttpResponse(
-                f"Login successful for user '{email}'."
-            )
+            user = User.objects.filter(email=email)
+            user_serializer = UserSerializer(user, many=True)
+            json_data = JSONRenderer().render(user_serializer.data)
+            return http.HttpResponse(json_data
+                                     )
         else:
             return http.HttpResponse(
                 f"Wrong password for email '{email}'."

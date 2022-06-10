@@ -1,16 +1,21 @@
 from rest_framework import serializers
-from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
-from .models import System, Component
+from .models import System, Component, User
 
 
-class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
-    @classmethod
-    def get_token(cls, user):
-        token = super().get_token(user)
-        token['email'] = user.email
-        token['password'] = user.password
-        return token
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = 'id', 'first_name', 'last_name', 'company', 'is_staff', 'email'
+
+
+# class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
+#     @classmethod
+#     def get_token(cls, user):
+#         token = super().get_token(user)
+#         token['email'] = user.email
+#         token['password'] = user.password
+#         return token
 
 
 # class RegisterSerializer(serializers.ModelSerializer):
