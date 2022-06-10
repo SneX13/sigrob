@@ -35,15 +35,16 @@ const Login = () => {
         event.preventDefault();
         setLoading(true);
         try {
-            const response = AuthService.login(email, password)
-            console.log(JSON.stringify(response?.data));
-            console.log(JSON.stringify(response));
-            const accessToken = response?.data?.accessToken;
-            const roles = response?.data?.roles;
-            setAuth({email, password, roles, accessToken});
-            setEmail('');
-            setPassword('');
-            navigate(from, {replace: true});
+            AuthService.login(email, password)
+                .then(response => {
+                    const admin = response[0].is_staff;
+                    //setAuth({email, password, roles, accessToken,});
+                    setEmail('');
+                    setPassword('');
+                    //navigate(from, {replace: true});
+                    admin ? navigate("/admin") : navigate("/user")
+                    setLoading(false)
+                })
         } catch (err) {
             console.log("ERR:", err)
             if (!err?.response) {

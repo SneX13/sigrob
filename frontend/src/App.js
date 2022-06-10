@@ -11,7 +11,6 @@ import Unauthorized from "./components/Unauthorized";
 
 const ROLES = {
     'User': 2001,
-    'Editor': 1984,
     'Admin': 5150
 }
 
@@ -22,12 +21,13 @@ function App() {
                 {/* public routes */}
                 <Route path="login" element={<Login/>}/>
                 <Route path="unauthorized" element={<Unauthorized/>}/>
-
+                <Route path="admin" element={<AdminDashboard/>}/>
+                <Route path="user" element={<UserDashboard/>}/>
                 {/* protect routes */}
                 <Route element={<RequireAuth allowedRoles={[ROLES.Admin]}/>}>
                     <Route path="admin-dashboard" element={<AdminDashboard/>}/>
                 </Route>
-                <Route element={<RequireAuth allowedRoles={[ROLES.Admin, ROLES.Editor]}/>}>
+                <Route element={<RequireAuth allowedRoles={[ROLES.Admin, ROLES.User]}/>}>
                     <Route path="user-dashboard" element={<UserDashboard/>}/>
                 </Route>
 
