@@ -1,12 +1,34 @@
 from django import http
 from django.contrib.auth import authenticate, login, logout
 from rest_framework.parsers import JSONParser
+from rest_framework.renderers import JSONRenderer
 from rest_framework.views import APIView
 
 from ..models import User
+from ..serializers import UserSerializer
 
 
-class LoginAttempt(APIView):
+class UserData(APIView):
+    @staticmethod
+    def get(request: http.HttpRequest) -> http.HttpResponse:
+        user_data = JSONParser().parse(request)
+        if "email" not in user_data:
+            return http.HttpResponseBadRequest(
+                "User data request should contain an email field."
+            )
+        email = user_data["email"]
+        try:
+            user = User.objects.get(email=email)
+        except User.DoesNotExist:
+            return http.HttpResponseBadRequest(
+                f"User with email '{email}' does not exist in database."
+            )
+        user_serializer = UserSerializer(user, many=False)
+        json_data = JSONRenderer().render(user_serializer.data)
+        return http.HttpResponse(json_data)
+
+
+class Login(APIView):
     @staticmethod
     def post(request: http.HttpRequest) -> http.HttpResponse:
         login_data = JSONParser().parse(request)
