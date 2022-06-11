@@ -1,6 +1,8 @@
 import React, {useState, useRef, useEffect} from "react";
-import useAuth from '../../hooks/useAuth';
-import {Link, Navigate, useNavigate, useLocation} from 'react-router-dom';
+import {useNavigate} from 'react-router-dom';
+import {useDispatch} from 'react-redux'
+import {setCredentials} from "../../auth/authSlice";
+import {useLoginMutation} from "../../auth/authApiSlice";
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
@@ -12,46 +14,48 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import {createTheme, ThemeProvider} from '@mui/material/styles';
 import {Alert} from "@mui/material";
-import AuthService from "../../services/auth.service";
 
 const theme = createTheme();
 
 const Login = () => {
-    const {setAuth} = useAuth();
+    const userRef = useRef();
     const navigate = useNavigate();
-    const location = useLocation();
-    const from = location.state?.from?.pathname || "/";
     const errRef = useRef();
+    const [user, setUser] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [login, {isLoading}] = useLoginMutation();
     const [loading, setLoading] = useState(false);
     const [errMsg, setErrMsg] = useState('');
+    const dispatch = useDispatch();
 
     useEffect(() => {
-        setErrMsg('');
-    }, [email, password])
+        userRef.current.focus()
+    }, [])
 
-    const handleSubmit = (event) => {
+    useEffect(() => {
+        setErrMsg('')
+    }, [user, password])
+
+    const handleSubmit = async (event) => {
         event.preventDefault();
-        setLoading(true);
+        setLoading(true)
         try {
-            AuthService.login(email, password)
-                .then(response => {
-                    const admin = response[0].is_staff;
-                    //setAuth({email, password, roles, accessToken,});
-                    setEmail('');
-                    setPassword('');
-                    //navigate(from, {replace: true});
-                    admin ? navigate("/admin") : navigate("/user")
-                    setLoading(false)
-                })
+            const userData = await login({email, password}).unwrap();
+            console.log("USER DATA:", userData)
+            /*getting only the token ??? should dispatch user not email*/
+            dispatch(setCredentials({...userData, email}));
+            setUser('');
+            setPassword('');
+            navigate("/admin");
+            setLoading(false)
         } catch (err) {
-            console.log("ERR:", err)
-            if (!err?.response) {
+            if (!err?.originalStatus) {
+                // isLoading: true until timeout occurs
                 setErrMsg('No Server Response');
-            } else if (err.response?.status === 400) {
+            } else if (err.originalStatus === 400) {
                 setErrMsg('Missing Username or Password');
-            } else if (err.response?.status === 401) {
+            } else if (err.originalStatus === 401) {
                 setErrMsg('Unauthorized');
             } else {
                 setErrMsg('Login Failed');
@@ -59,71 +63,76 @@ const Login = () => {
             errRef.current.focus();
         }
     };
+    const handleEmailInput = (e) => setEmail(e.target.value)
+
+    const handlePasswordInput = (e) => setPassword(e.target.value)
 
     return (
-        <ThemeProvider theme={theme}>
-            <Container component="main" maxWidth="xs">
-                <Box
-                    sx={{
-                        marginTop: 8,
-                        display: 'flex',
-                        flexDirection: 'column',
-                        alignItems: 'center',
-                    }}
-                >
-                    <Avatar sx={{m: 1, bgcolor: 'secondary.main'}}>
-                        <LockOutlinedIcon/>
-                    </Avatar>
-                    <Typography component="h1" variant="h5">
-                        Sign in
-                    </Typography>
-                    <Box component="form" onSubmit={handleSubmit}  sx={{mt: 1}}>
-                        <TextField
-                            margin="normal"
-                            required
-                            fullWidth
-                            id="email"
-                            label="Email Address"
-                            type="email"
-                            name="email"
-                            autoFocus
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
+        isLoading ? <h1>Loading...</h1> :
+            <ThemeProvider theme={theme}>
+                <Container component="main" maxWidth="xs">
+                    <Box
+                        sx={{
+                            marginTop: 8,
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: 'center',
+                        }}
+                    >
+                        <Avatar sx={{m: 1, bgcolor: 'secondary.main'}}>
+                            <LockOutlinedIcon/>
+                        </Avatar>
+                        <Typography component="h1" variant="h5">
+                            Sign in
+                        </Typography>
+                        <Box component="form" onSubmit={handleSubmit} sx={{mt: 1}}>
+                            <TextField
+                                margin="normal"
+                                required
+                                fullWidth
+                                id="email"
+                                label="Email Address"
+                                type="email"
+                                name="email"
+                                autoFocus
+                                value={email}
+                                ref={userRef}
+                                onChange={handleEmailInput}
 
-                        />
-                        <TextField
-                            margin="normal"
-                            required
-                            fullWidth
-                            name="password"
-                            label="Password"
-                            type="password"
-                            id="password"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                        />
-                        <FormControlLabel
-                            control={<Checkbox value="remember" color="primary"/>}
-                            label="Remember me"
-                        />
-                        <Button
-                            type="submit"
-                            fullWidth
-                            variant="contained"
-                            sx={{mt: 3, mb: 2}}
-                            disabled={loading || !(email && password)}
-                        >
-                            Sign In
-                        </Button>
-                        {errMsg && (
-                            <Box>
-                                <Alert severity="error">{errMsg}</Alert>
-                            </Box>
-                        )}
+                            />
+                            <TextField
+                                margin="normal"
+                                required
+                                fullWidth
+                                name="password"
+                                label="Password"
+                                type="password"
+                                id="password"
+                                value={password}
+                                onChange={handlePasswordInput}
+                            />
+                            <FormControlLabel
+                                control={<Checkbox value="remember" color="primary"/>}
+                                label="Remember me"
+                            />
+                            <Button
+                                type="submit"
+                                fullWidth
+                                variant="contained"
+                                sx={{mt: 3, mb: 2}}
+                                disabled={loading || !(email && password)}
+                            >
+                                Sign In
+                            </Button>
+                            {errMsg && (
+                                <Box>
+                                    <Alert severity="error">{errMsg}</Alert>
+                                </Box>
+                            )}
+                        </Box>
                     </Box>
-                </Box>
-            </Container>
-        </ThemeProvider>
+                </Container>
+            </ThemeProvider>
     )
 }
 

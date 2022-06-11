@@ -1,4 +1,6 @@
-import * as React from 'react';
+import React, {useEffect, useState} from 'react';
+import {useDispatch, useSelector} from "react-redux";
+import { selectCurrentUser, selectCurrentToken } from "../../auth/authSlice"
 import {styled, createTheme, ThemeProvider} from '@mui/material/styles';
 import MuiDrawer from '@mui/material/Drawer';
 import Box from '@mui/material/Box';
@@ -18,7 +20,6 @@ import Button from "@mui/material/Button";
 import AddIcon from '@mui/icons-material/Add'
 import UserMenu from "../UserMenu/UserMenu";
 import SystemsList from "../SystemsList/SystemsList";
-import {useEffect, useState} from "react";
 import DataService from "../../services/api";
 
 const drawerWidth = 240;
@@ -74,22 +75,38 @@ export default function Dashboard(props) {
     const toggleDrawer = () => {
         setOpen(!open);
     };
-    const [users, setUsers] = useState([]);
+    const dispatch = useDispatch()
+    const user = useSelector(selectCurrentUser)
+
+    /* const [systems, setUsers] = useState([]);
+
+     useEffect(() => {
+         getUsers();
+     }, []);
+
+     const getUsers = () => {
+         DataService.getAllUsers()
+             .then(response => {
+                 setUsers(response.data);
+             })
+             .catch(e => {
+                 console.log(e);
+             });
+     };*/
+
+   // const [systems, setSystems] = useState([]);
 
     useEffect(() => {
-        getUsers();
+        getSystems();
     }, []);
 
-    const getUsers = () => {
-        DataService.getAllUsers()
-            .then(response => {
-                setUsers(response.data);
-            })
-            .catch(e => {
-                console.log(e);
-            });
+    const getSystems = () => {
+        console.log("USER is:", user)
+        DataService.getAllSystems()
+            .then(response => response.json())
+            .then(systems => dispatch({type: "SET_SYSTEMS", }))
     };
-
+    const systems = useSelector(state => state.systems)
 
     return (
         <ThemeProvider theme={mdTheme}>
@@ -158,7 +175,7 @@ export default function Dashboard(props) {
                 >
                     <Container maxWidth="lg" sx={{mt: 4, mb: 4}}>
                         <Grid container spacing={3}>
-                            {props.isAdmin &&
+                            {props.isAdmin && !!systems &&
 
                                 <Grid item xs={12}>
                                     {/*  if there is no system */}
