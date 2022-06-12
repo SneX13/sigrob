@@ -42,8 +42,7 @@ const Login = () => {
         setLoading(true)
         try {
             const userData = await login({email, password}).unwrap();
-            console.log("USER DATA:", userData)
-            /*getting only the token ??? should dispatch user not email*/
+            /*maybe todo: getting only the token ??? should dispatch user not email*/
             dispatch(setCredentials({...userData, email}));
             setUser('');
             setPassword('');
