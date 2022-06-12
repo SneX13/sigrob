@@ -12,7 +12,7 @@ class UserSerializer(serializers.ModelSerializer):
 class SystemSerializer(serializers.ModelSerializer):
     class Meta:
         model = System
-        fields = 'id', 'name', 'company'
+        fields = 'id', 'name', 'company', 'user_in_control', 'control_state'
 
 
 class ComponentSerializer(serializers.ModelSerializer):

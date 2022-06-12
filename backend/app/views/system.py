@@ -1,4 +1,6 @@
 from django import http
+from django.core.handlers.wsgi import WSGIRequest
+from django.http import HttpResponse, HttpResponseBadRequest
 from rest_framework.parsers import JSONParser
 from rest_framework.renderers import JSONRenderer
 from rest_framework.views import APIView
@@ -86,3 +88,64 @@ class SystemTable(APIView):
         return http.HttpResponse(
             f"Successfully deleted system '{deleted_system_name}'."
         )
+
+
+class SystemControl(APIView):
+    class ACTIONS:
+        REQUEST = 'request'
+        RELEASE = 'release'
+        ALLOW_TRANSFER = 'transfer'
+
+        ALL = REQUEST, RELEASE, ALLOW_TRANSFER
+
+    def post(self, request: WSGIRequest, action: str = None) -> HttpResponse:
+        if action not in self.ACTIONS.ALL:
+            return HttpResponseBadRequest(
+                f"System control action must be defined as '../control/<action>/', "
+                f"the available actions are: \n{self.ACTIONS.ALL}"
+            )
+        get_system_id, get_user_id = "id", "user"
+        try:
+            if request.body:
+                body = JSONParser().parse(request)
+                system_id = body.get(get_system_id)
+                user_id = body.get(get_user_id)
+            else:
+                system_id = request.GET.get(get_system_id)
+                user_id = request.GET.get(get_user_id)
+        except KeyError:
+            return HttpResponseBadRequest(
+                f"System control request should contain the ID field of the system "
+                f"defined by '{get_system_id}', as well as the ID of the user defined "
+                f"by '{get_user_id}'."
+            )
+        try:
+            system = System.objects.get(id=system_id)
+        except System.DoesNotExist:
+            return HttpResponseBadRequest(
+                f"System with ID '{system_id}' does not exist in database."
+            )
+        try:
+            user = User.objects.get(id=user_id)
+        except User.DoesNotExist:
+            return HttpResponseBadRequest(
+                f"User with ID '{user_id}' does not exist in database."
+            )
+        if action == self.ACTIONS.REQUEST:
+            if system.user_in_control:
+                system.request_control_from_user()
+            else:
+                system.acquire_system_control()
+                system.user_in_control = user
+        elif action == self.ACTIONS.RELEASE:
+            system.release_system_control()
+            system.user_in_control = None
+        elif action == self.ACTIONS.ALLOW_TRANSFER:
+            system.transfer_control_to_user()
+            system.user_in_control = user
+        else:
+            raise NotImplementedError
+        system.atomic_save()
+        systems_serializer = SystemSerializer(system, many=False)
+        json_data = JSONRenderer().render(systems_serializer.data)
+        return HttpResponse(json_data)
