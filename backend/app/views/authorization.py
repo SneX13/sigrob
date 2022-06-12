@@ -1,5 +1,5 @@
 from django import http
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import authenticate, logout
 from rest_framework.parsers import JSONParser
 from rest_framework.renderers import JSONRenderer
 from rest_framework.views import APIView
@@ -45,13 +45,12 @@ class Login(APIView):
             )
         user = authenticate(request, email=email, password=password)
         if user is not None:
-            login(request, user)
-            return http.HttpResponse(
-                f"Login successful for user '{email}'."
-            )
+            user_serializer = UserSerializer(user, many=False)
+            json_data = JSONRenderer().render(user_serializer.data)
+            return http.HttpResponse(json_data)
         else:
             return http.HttpResponse(
-                f"Wrong password for email '{email}'."
+                f"Email and password combination is not correct."
             )
 
 
