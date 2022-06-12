@@ -1,5 +1,4 @@
-import React, {useEffect, useRef, useState} from "react";
-import useAuth from '../../hooks/useAuth';
+import React, {useEffect, useState} from "react";
 import {useLocation, useNavigate} from 'react-router-dom';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
@@ -18,16 +17,16 @@ const theme = createTheme();
 
 
 const Login = () => {
-    const {setAuth} = useAuth();
+    // const {setAuth} = useAuth();
     let [authTokens, setAuthTokens] = useState(() => localStorage.getItem('authTokens') ? JSON.parse(
         localStorage.getItem('authTokens')) : null)
     let [user, setUser] = useState(() => localStorage.getItem('authTokens') ? jwt_decode(
         localStorage.getItem('authTokens')) : null);
     let [loader, setLoader] = useState(true)
-    const navigate = useNavigate();
+    // const navigate = useNavigate();
     const location = useLocation();
-    const from = location.state?.from?.pathname || "/";
-    const errRef = useRef();
+    // const from = location.state?.from?.pathname || "/";
+    // const errRef = useRef();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [loading, setLoading] = useState(false);
@@ -59,7 +58,7 @@ const Login = () => {
             setAuthTokens(data);
             setUser(jwt_decode(data.access));
             localStorage.setItem('authTokens', JSON.stringify(data));
-            navigateTo('/admin');
+            navigateTo('/');
         } else {
             alert("Some error")
         }
