@@ -1,4 +1,6 @@
 from rest_framework import serializers
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from rest_framework_simplejwt.views import TokenObtainPairView
 
 from .models import System, Component, User
 
@@ -9,40 +11,33 @@ class UserSerializer(serializers.ModelSerializer):
         fields = 'id', 'first_name', 'last_name', 'company', 'is_staff', 'email'
 
 
-# class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
-#     @classmethod
-#     def get_token(cls, user):
-#         token = super().get_token(user)
-#         token['email'] = user.email
-#         token['password'] = user.password
-#         return token
+class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
+    def update(self, instance, validated_data):
+        pass
+
+    def create(self, validated_data):
+        pass
+
+    # We can customize the token claim. Set what is going to be encrypted into the
+    # token.
+    @classmethod
+    def get_token(cls, user):
+        token = super().get_token(user)
+
+        # Add the information from the user object, encrypt the value
+        token['email'] = user.email
+        token['first name'] = user.first_name
+        token['last name'] = user.last_name
+        token['company'] = user.company_id
+
+        # The value is returned
+        return token
 
 
-# class RegisterSerializer(serializers.ModelSerializer):
-#     password = serializers.CharField(
-#         write_only=True, required=True, validators=[validate_password])
-#     password2 = serializers.CharField(write_only=True, required=True)
-#
-#     class Meta:
-#         model = User
-#         fields = ('email', 'password', 'password2')
-#
-#     def validate(self, attrs, password2=None):
-#         if attrs['password'] == attrs[password2]:
-#             raise serializers.ValidationError(
-#                 {"password": "Password fields did not match"}
-#             )
-#         return attrs
-#
-#     def create(self, validated_data):
-#         user = User.objects.create(
-#             email=validated_data['email']
-#         )
-#         user.set_password(validated_data['password'])
-#         user.save()
-#
-#         return user
-#
+class MyTokenObtainPairView(TokenObtainPairView):
+    # Customized version of TokenObtainPairView.
+    # Add the returned token value as a serializer class
+    serializer_class = MyTokenObtainPairSerializer
 
 
 class SystemSerializer(serializers.ModelSerializer):
