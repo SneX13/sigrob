@@ -1,6 +1,6 @@
 import React, {useState, useRef, useEffect} from "react";
 import {useNavigate} from 'react-router-dom';
-import {useDispatch} from 'react-redux'
+import {useDispatch} from 'react-redux';
 import {setCredentials} from "../../auth/authSlice";
 import {useLoginMutation} from "../../auth/authApiSlice";
 import Avatar from '@mui/material/Avatar';
@@ -13,7 +13,7 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import {createTheme, ThemeProvider} from '@mui/material/styles';
-import {Alert} from "@mui/material";
+import {Alert, CircularProgress} from "@mui/material";
 
 const theme = createTheme();
 
@@ -42,15 +42,14 @@ const Login = () => {
         setLoading(true)
         try {
             const userData = await login({email, password}).unwrap();
-            /*maybe todo: getting only the token ??? should dispatch user not email*/
-            dispatch(setCredentials({...userData, email}));
+            /*todo:check the token*/
+            dispatch(setCredentials({user: userData[0]}));
             setUser('');
             setPassword('');
-            navigate("/admin");
+            userData[0].is_staff ? navigate("/admin") : navigate("/user");
             setLoading(false)
         } catch (err) {
             if (!err?.originalStatus) {
-                // isLoading: true until timeout occurs
                 setErrMsg('No Server Response');
             } else if (err.originalStatus === 400) {
                 setErrMsg('Missing Username or Password');
@@ -67,7 +66,7 @@ const Login = () => {
     const handlePasswordInput = (e) => setPassword(e.target.value)
 
     return (
-        isLoading ? <h1>Loading...</h1> :
+        isLoading ? <CircularProgress/> :
             <ThemeProvider theme={theme}>
                 <Container component="main" maxWidth="xs">
                     <Box
