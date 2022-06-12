@@ -37,9 +37,8 @@ class SystemTable(APIView):
         system_serializer = SystemSerializer(data=system_data)
         if system_serializer.is_valid():
             system_serializer.save()
-            return http.HttpResponse(
-                "Successfully created new system."
-            )
+            json_data = JSONRenderer().render(system_serializer.data)
+            return http.HttpResponse(json_data)
         return http.HttpResponseBadRequest(
             "System to create is not valid."
         )

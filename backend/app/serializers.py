@@ -43,10 +43,13 @@ class MyTokenObtainPairView(TokenObtainPairView):
 class SystemSerializer(serializers.ModelSerializer):
     class Meta:
         model = System
-        fields = 'id', 'name', 'parent', 'company'
+        fields = 'id', 'name', 'company'
 
 
 class ComponentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Component
-        fields = 'id', 'name', 'system'
+        fields = (
+            'id', 'name', 'system', 'x_position', 'y_position', 'rotation', 'scale',
+            'mirrored'
+        )

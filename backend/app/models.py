@@ -70,8 +70,7 @@ class User(AbstractUser):
 
 class System(models.Model):
     name = models.CharField(max_length=255)
-    parent = models.IntegerField(null=True)
-    company = models.ForeignKey(Company, models.CASCADE)
+    company = models.ForeignKey(Company, models.CASCADE, null=True)
 
     def __str__(self):
         return f'{self.company} | {self.name}'
@@ -80,6 +79,11 @@ class System(models.Model):
 class Component(models.Model):
     name = models.CharField(max_length=255)
     system = models.ForeignKey(System, models.CASCADE)
+    x_position = models.FloatField(default=0.0)
+    y_position = models.FloatField(default=0.0)
+    rotation = models.FloatField(default=0.0)
+    mirrored = models.BooleanField(default=False)
+    scale = models.FloatField(default=1.0)
 
     def __str__(self):
         return f'{self.system} | {self.name} {self.id}'

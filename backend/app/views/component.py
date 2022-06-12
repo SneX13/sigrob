@@ -27,9 +27,8 @@ class ComponentTable(APIView):
         component_serializer = ComponentSerializer(data=component_data)
         if component_serializer.is_valid():
             component_serializer.save()
-            return http.HttpResponse(
-                "Successfully created new component."
-            )
+            json_data = JSONRenderer().render(component_serializer.data)
+            return http.HttpResponse(json_data)
         return http.HttpResponseBadRequest(
             f"Component to create is not valid."
         )
