@@ -5,40 +5,9 @@ from rest_framework.parsers import JSONParser
 from rest_framework.renderers import JSONRenderer
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
-from rest_framework_simplejwt.views import TokenObtainPairView
 
 from ..models import User
 from ..serializers import UserSerializer
-
-
-class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
-    def update(self, instance, validated_data):
-        pass
-
-    def create(self, validated_data):
-        pass
-
-    # We can customize the token claim. Set what is going to be encrypted into the
-    # token.
-    @classmethod
-    def get_token(cls, user):
-        token = super().get_token(user)
-
-        # Add the information from the user object, encrypt the value
-        token['email'] = user.email
-        token['first name'] = user.first_name
-        token['last name'] = user.last_name
-        token['company'] = user.company_id
-
-        # The value is returned
-        return token
-
-
-class MyTokenObtainPairView(TokenObtainPairView):
-    # Customized version of TokenObtainPairView.
-    # Add the returned token value as a serializer class
-    serializer_class = MyTokenObtainPairSerializer
 
 
 @api_view(['GET'])
