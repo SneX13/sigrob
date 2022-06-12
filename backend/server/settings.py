@@ -38,7 +38,6 @@ INSTALLED_APPS = [
 
     'rest_framework',
     'rest_framework_simplejwt.token_blacklist',
-
 ]
 
 CORS_ORIGIN_ALLOW_ALL = True
@@ -172,7 +171,7 @@ SIMPLE_JWT = {
 
     'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
     'TOKEN_TYPE_CLAIM': 'token_type',
-    # 'TOKEN_USER_CLASS': 'rest_framework_simplejwt.models.TokenUser',
+    'TOKEN_USER_CLASS': 'rest_framework_simplejwt.models.TokenUser',
 
     'JTI_CLAIM': 'jti',
 
