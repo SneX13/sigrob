@@ -13,8 +13,8 @@ from ..serializers import UserSerializer
 @api_view(['GET'])
 def get_routes(request):
     routes = [
-        '/app/token',
-        '/app/token/refresh',
+        '/api/token',
+        '/api/token/refresh',
     ]
 
     return Response(routes)
