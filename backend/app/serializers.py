@@ -20,5 +20,5 @@ class ComponentSerializer(serializers.ModelSerializer):
         model = Component
         fields = (
             'id', 'name', 'system', 'x_position', 'y_position', 'rotation', 'scale',
-            'mirrored'
+            'mirrored', 'error_flag', 'state'
         )

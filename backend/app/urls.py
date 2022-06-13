@@ -7,6 +7,7 @@ urlpatterns = [
     path('login/', authorization.Login.as_view()),
     path('logout/', authorization.Logout.as_view()),
     path('systems/', system.SystemTable.as_view()),
-    path('control/<str:action>/', system.SystemControl.as_view()),
-    path('components/', component.ComponentTable.as_view())
+    path('systems/control/<str:action>', system.SystemControl.as_view()),
+    path('components/', component.ComponentTable.as_view()),
+    path('components/control/<str:action>', component.ComponentControl.as_view()),
 ]

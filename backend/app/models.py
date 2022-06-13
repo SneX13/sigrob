@@ -133,6 +133,20 @@ class System(ConcurrentTransitionMixin, models.Model):
 
 
 class Component(models.Model):
+    class STATE:
+        IDLE = 'idle'
+        RUNNING = 'running'
+        AUTOMATIC = 'automatic'
+        ERROR = 'error'
+
+        INITIAL = IDLE
+        CHOICES = (
+            (IDLE, IDLE.title()),
+            (RUNNING, RUNNING.title()),
+            (AUTOMATIC, AUTOMATIC.title()),
+            (ERROR, ERROR.title()),
+        )
+
     name = models.CharField(max_length=255)
     system = models.ForeignKey(System, models.CASCADE)
     x_position = models.FloatField(default=0.0)
@@ -140,6 +154,57 @@ class Component(models.Model):
     rotation = models.FloatField(default=0.0)
     mirrored = models.BooleanField(default=False)
     scale = models.FloatField(default=1.0)
+    error_flag = models.BooleanField(default=False)
+    state = FSMField(
+        max_length=50,
+        default=STATE.INITIAL,
+        choices=STATE.CHOICES,
+        protected=True,
+    )
+
+    def atomic_save(self):
+        with transaction.atomic(durable=True):
+            self.save()
+
+    @transition(
+        field=state,
+        source=STATE.IDLE,
+        target=STATE.RUNNING,
+    )
+    def start(self):
+        ...
+
+    @transition(
+        field=state,
+        source=[STATE.RUNNING, STATE.AUTOMATIC],
+        target=STATE.IDLE,
+    )
+    def stop(self):
+        ...
+
+    @transition(
+        field=state,
+        source='*',
+        target=STATE.IDLE,
+    )
+    def reset(self):
+        ...  # Set origin/initial positions here
+
+    @transition(
+        field=state,
+        source=STATE.IDLE,
+        target=STATE.AUTOMATIC,
+    )
+    def auto_mode(self):
+        ...
+
+    @transition(
+        field=state,
+        source='*',
+        target=STATE.ERROR,
+    )
+    def error_mode(self):
+        ...
 
     def __str__(self):
-        return f'{self.system} | {self.name} {self.id}'
+        return f'{self.system} | {self.name}'

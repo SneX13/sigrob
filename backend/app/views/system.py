@@ -146,6 +146,6 @@ class SystemControl(APIView):
         else:
             raise NotImplementedError
         system.atomic_save()
-        systems_serializer = SystemSerializer(system, many=False)
-        json_data = JSONRenderer().render(systems_serializer.data)
+        system_serializer = SystemSerializer(system, many=False)
+        json_data = JSONRenderer().render(system_serializer.data)
         return HttpResponse(json_data)
