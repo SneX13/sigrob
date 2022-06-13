@@ -64,11 +64,10 @@ export default function CreateNewSystemModal(props) {
                             autoFocus
                             value={name}
                             onChange={handleNameInput}
-
                         />
                     </Box>
                 </DialogContent>
-                <DialogActions  sx={{mb: 2}}>
+                <DialogActions sx={{mb: 2}}>
                     <Button onClick={() => props.close()} variant="outlined">Cancel</Button>
                     <Button onClick={handleSubmit}
                             type="submit"
