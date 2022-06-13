@@ -1,3 +1,4 @@
+from django import http
 from django.core.handlers.wsgi import WSGIRequest
 from django.http import HttpResponse, HttpResponseBadRequest
 from rest_framework.parsers import JSONParser
@@ -83,3 +84,54 @@ class ComponentTable(APIView):
         return HttpResponse(
             f"Successfully deleted component with id '{deleted_component_id}'"
         )
+
+
+class ComponentControl(APIView):
+    class ACTIONS:
+        START = 'start'
+        STOP = 'stop'
+        RESET = 'reset'
+        AUTO = 'auto'
+
+        ALL = START, STOP, RESET, AUTO
+
+    def post(self, request: WSGIRequest, action: str = None) -> HttpResponse:
+        if action not in self.ACTIONS.ALL:
+            return HttpResponseBadRequest(
+                f"System control action must be defined as '../control/<action>/', "
+                f"the available actions are: \n{self.ACTIONS.ALL}"
+            )
+        get_id = "id"
+        try:
+            if request.body:
+                body = JSONParser().parse(request)
+                id_ = body.get(get_id)
+            else:
+                id_ = request.GET.get(get_id)
+        except KeyError:
+            return HttpResponseBadRequest(
+                "Component control request should contain the ID field of the "
+                "component."
+            )
+        try:
+            component = Component.objects.get(id=id_)
+        except Component.DoesNotExist:
+            return HttpResponseBadRequest(
+                f"Component with ID '{id_}' does not exist in database."
+            )
+        if component.error_flag:
+            component.error_mode()
+        elif action == self.ACTIONS.START:
+            component.start()
+        elif action == self.ACTIONS.STOP:
+            component.stop()
+        elif action == self.ACTIONS.RESET:
+            component.reset()
+        elif action == self.ACTIONS.AUTO:
+            component.auto_mode()
+        else:
+            raise NotImplementedError
+        component.atomic_save()
+        component_serializer = ComponentSerializer(component, many=False)
+        json_data = JSONRenderer().render(component_serializer.data)
+        return HttpResponse(json_data)

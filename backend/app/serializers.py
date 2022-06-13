@@ -8,7 +8,7 @@ from .models import System, Component, User
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = 'id', 'first_name', 'last_name', 'company', 'is_staff', 'email'
+        fields = 'first_name', 'last_name', 'is_staff', 'company'
 
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
@@ -43,7 +43,7 @@ class MyTokenObtainPairView(TokenObtainPairView):
 class SystemSerializer(serializers.ModelSerializer):
     class Meta:
         model = System
-        fields = 'id', 'name', 'company'
+        fields = 'id', 'name', 'company', 'user_in_control', 'control_state'
 
 
 class ComponentSerializer(serializers.ModelSerializer):
@@ -51,5 +51,5 @@ class ComponentSerializer(serializers.ModelSerializer):
         model = Component
         fields = (
             'id', 'name', 'system', 'x_position', 'y_position', 'rotation', 'scale',
-            'mirrored'
+            'mirrored', 'error_flag', 'state'
         )
