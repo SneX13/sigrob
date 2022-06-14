@@ -1,4 +1,3 @@
-from django import http
 from django.core.handlers.wsgi import WSGIRequest
 from django.http import HttpResponse, HttpResponseBadRequest
 from rest_framework.parsers import JSONParser
@@ -87,11 +86,9 @@ class SystemTable(APIView):
             return HttpResponseBadRequest(
                 f"System with ID '{system_data['id']}' does not exist in database."
             )
-        deleted_system_name = system.name
+        id_ = system_data['id']
         system.delete()
-        return HttpResponse(
-            f"Successfully deleted system '{deleted_system_name}'."
-        )
+        return HttpResponse('{"id":' + str(id_) + '}')
 
 
 class SystemControl(APIView):
