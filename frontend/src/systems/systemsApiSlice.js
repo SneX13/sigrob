@@ -1,6 +1,6 @@
 import {apiSlice} from "../services/apiSlice";
 import {createSelector, createEntityAdapter} from "@reduxjs/toolkit";
-import { sub } from 'date-fns';
+import {sub} from 'date-fns';
 
 /*Managing Normalizing Data with createEntityAdapter which accepts an options object that may include a sortComparer
 function, which will be used to keep the item IDs array in sorted order by comparing two items (and works the same way
@@ -19,19 +19,27 @@ export const systemsApiSlice = apiSlice.injectEndpoints({
                 url: `/api/systems/?user=${id}`,
                 method: 'GET',
             }),
-
+            /*   transformResponse: responseData => {
+                   let min = 1;
+                   const loadedSystems = responseData.map(system => {
+                       if (!system?.date) system.date = sub(new Date(), {minutes: min++}).toISOString();
+                       return system;
+                   });
+                   return systemsAdapter.setAll(initialState, loadedSystems)
+               },*/
             providesTags: (result, error, arg) => [
                 ...result.ids.map(id => ({type: 'System', id}))
             ]
         }),
         addNewSystem: builder.mutation({
             query: initialSystem => ({
-                url: '/api/systems',
+                url: '/api/systems/',
                 method: 'POST',
                 body: {
                     ...initialSystem,
                 }
             }),
+
             invalidatesTags: [
                 {type: 'System', id: "LIST"}
             ]
@@ -50,7 +58,7 @@ export const systemsApiSlice = apiSlice.injectEndpoints({
         }),
         deleteSystem: builder.mutation({
             query: ({id}) => ({
-                url: `/api/systems/${id}`,
+                url: `/api/systems/`,
                 method: 'DELETE',
                 body: {id}
             }),

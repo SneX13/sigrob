@@ -40,7 +40,8 @@ const SingleSystem = () => {
     const {systemId} = useParams();
 
     const system = useSelector((state) => selectSystemById(state, Number(systemId)))
-
+    console.log("SYS ID; ", systemId)
+    console.log("SYSTEM, ", system)
     const [open, setOpen] = useState(true);
 
     const [openAlert, setOpenAlert] = useState(true);
@@ -71,7 +72,7 @@ const SingleSystem = () => {
                             noWrap
                             sx={{flexGrow: 1}}
                         >
-                            {system[0].name}
+                            {system.name}
                         </Typography>
                         <UserMenu/>
                     </Toolbar>
@@ -97,7 +98,7 @@ const SingleSystem = () => {
                                        </Button>
                                    }
                             >
-                                You are viewing system_name. You can edit the system by clicking the Edit button.
+                                You are viewing {system.name}. You can edit the system by clicking the Edit button.
                             </Alert>
                         </Collapse>
                         {!system &&

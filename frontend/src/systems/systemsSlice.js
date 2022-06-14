@@ -16,4 +16,6 @@ export const {setSystems} = systemsSlice.actions;
 export default systemsSlice.reducer;
 
 export const selectAvailableSystems = (state) => state.systems.systems;
-export const selectSystemById = (state) => state.systems.systems;
+export const selectSystemById = (state, systemId) =>
+    state.systems.systems.find(system => system.id === systemId);
+

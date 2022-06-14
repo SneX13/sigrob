@@ -28,18 +28,14 @@ export default function SystemCard(props) {
     const [deleteModal, setDeleteModal] = useState(false);
     const [deleteSystem] = useDeleteSystemMutation()
     const system = useSelector((state) => selectSystemById(state, Number(props.system.id)))
-    /*todo write this function*/
-    const updateSystem = (systemId) => {
-        console.log("UPDATE SYSTEM WITH ID; ", systemId)
-        navigate(`/systems/edit/${systemId}`)
-    };
 
-    const onDeleteSystem = async (id) => {
+    /*todo: finish the function*/
+    const onDeleteSystem = async () => {
         try {
-            await deleteSystem({id: id}).unwrap()
+            await deleteSystem({id: system.id}).unwrap()
             //remove system from list
             //show successfully deleted the system notification
-            navigate('/')
+            setDeleteModal(false)
         } catch (err) {
             console.error('Failed to delete the system', err)
         }
@@ -80,7 +76,7 @@ export default function SystemCard(props) {
                 </CardActionArea>
                 {props.admin &&
                     <CardActions>
-                        <Button size="small" onClick={() => updateSystem(props.system.id)}>Edit</Button>
+                        <Button size="small" onClick={() => navigate(`/systems/edit/${props.system.id}`)}>Edit</Button>
                         <Button size="small" onClick={handleOpenDeleteModal}>Delete</Button>
                     </CardActions>
                 }
@@ -102,7 +98,7 @@ export default function SystemCard(props) {
                 </DialogContent>
                 <DialogActions sx={{mb: 2}}>
                     <Button onClick={handleCloseDeleteModal} variant="outlined">Cancel</Button>
-                    <Button onClick={() => onDeleteSystem(props.system.id)} autoFocus variant="contained" color="error">
+                    <Button onClick={onDeleteSystem} autoFocus variant="contained" color="error">
                         Delete
                     </Button>
                 </DialogActions>
