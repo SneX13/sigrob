@@ -7,7 +7,6 @@ const systemsSlice = createSlice({
         setSystems: (state, action) => {
             const {systems} = action.payload
             state.systems = systems
-
         }
     },
 })
@@ -17,3 +16,4 @@ export const {setSystems} = systemsSlice.actions;
 export default systemsSlice.reducer;
 
 export const selectAvailableSystems = (state) => state.systems.systems;
+export const selectSystemById = (state) => state.systems.systems;

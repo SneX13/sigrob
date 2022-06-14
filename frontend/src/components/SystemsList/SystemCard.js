@@ -20,17 +20,31 @@ import {
 import {useState} from "react";
 import {useNavigate} from "react-router-dom";
 import DeleteSystemIcon from '@mui/icons-material/PriorityHigh';
+import {useDeleteSystemMutation} from "../../systems/systemsApiSlice";
+import {useSelector} from "react-redux";
+import {selectSystemById} from "../../systems/systemsSlice";
 
 export default function SystemCard(props) {
     const [deleteModal, setDeleteModal] = useState(false);
+    const [deleteSystem] = useDeleteSystemMutation()
+    const system = useSelector((state) => selectSystemById(state, Number(props.system.id)))
     /*todo write this function*/
-    const updateSystem = (id) => {
-        console.log("UPDATE SYSTEM WITH ID; ", id)
+    const updateSystem = (systemId) => {
+        console.log("UPDATE SYSTEM WITH ID; ", systemId)
+        navigate(`/systems/edit/${systemId}`)
     };
 
-    const deleteSystem = (id) => {
-        console.log("DELETE SYSTEM WITH ID; ", id)
-    };
+    const onDeleteSystem = async (id) => {
+        try {
+            await deleteSystem({id: id}).unwrap()
+            //remove system from list
+            //show successfully deleted the system notification
+            navigate('/')
+        } catch (err) {
+            console.error('Failed to delete the system', err)
+        }
+    }
+
     const handleOpenDeleteModal = () => {
         setDeleteModal(true);
     };
@@ -44,7 +58,7 @@ export default function SystemCard(props) {
             <Card sx={{maxWidth: 345}}>
                 {/* todo: Pass props for all dynamic data: system name, subtitle, image, system id, etc */
                 }
-                <CardActionArea onClick={() => navigate(`/app/systems/${props.system.id}/`)}>
+                <CardActionArea onClick={() => navigate(`/systems/${props.system.id}/`)}>
                     <CardHeader
                         avatar={
                             <Avatar/>
@@ -88,7 +102,7 @@ export default function SystemCard(props) {
                 </DialogContent>
                 <DialogActions sx={{mb: 2}}>
                     <Button onClick={handleCloseDeleteModal} variant="outlined">Cancel</Button>
-                    <Button onClick={() => deleteSystem(props.system.id)} autoFocus variant="contained" color="error">
+                    <Button onClick={() => onDeleteSystem(props.system.id)} autoFocus variant="contained" color="error">
                         Delete
                     </Button>
                 </DialogActions>

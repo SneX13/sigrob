@@ -11,7 +11,8 @@ const baseQuery = fetchBaseQuery({
             headers.set("Authorization", `Bearer ${token}`)
         }
         return headers
-    }
+    },
+    tagTypes: ['System', 'User'],
 })
 /* wrapper for base query if base query fails reattempt after sending a refresh token and getting the new access token
 * e.g. if access token expires access the current refresh token will allow to get new access token */

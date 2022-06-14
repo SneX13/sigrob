@@ -1,5 +1,5 @@
 from django import http
-from django.contrib.auth import authenticate, logout
+from django.contrib.auth import authenticate, login, logout
 from rest_framework.decorators import api_view
 from rest_framework.parsers import JSONParser
 from rest_framework.renderers import JSONRenderer
@@ -13,8 +13,8 @@ from ..serializers import UserSerializer
 @api_view(['GET'])
 def get_routes(request):
     routes = [
-        '/app/token',
-        '/app/token/refresh',
+        '/api/token',
+        '/api/token/refresh',
     ]
 
     return Response(routes)

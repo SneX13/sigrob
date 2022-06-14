@@ -21,7 +21,7 @@ export default function CreateNewSystemModal(props) {
         event.preventDefault();
         setLoading(true)
         try {
-            // const systemData = await create(name).unwrap();
+            //const systemData = await create(name).unwrap();
             setName('');
             //navigate(`/systems/${id}/`);
             setLoading(false)

@@ -101,7 +101,6 @@ export default function Dashboard(props) {
     const handleFetchSystems = async (event) => {
         try {
             const systems = await getSystems(user.id).unwrap();
-            console.log("SYSTEMS: ", systems)
             dispatch(setSystems({systems}));
         } catch (err) {
             /*    if (!err?.originalStatus) {
