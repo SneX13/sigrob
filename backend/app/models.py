@@ -91,6 +91,7 @@ class System(ConcurrentTransitionMixin, models.Model):
         default=STATE.INITIAL,
         choices=STATE.CHOICES,
         protected=True,
+        null=True,
     )
 
     def __str__(self):
@@ -161,6 +162,7 @@ class Component(models.Model):
         default=STATE.INITIAL,
         choices=STATE.CHOICES,
         protected=True,
+        null=True,
     )
 
     def atomic_save(self):
