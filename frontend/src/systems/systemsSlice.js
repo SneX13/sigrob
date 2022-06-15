@@ -1,3 +1,4 @@
+/*
 import {createSlice} from "@reduxjs/toolkit";
 
 const systemsSlice = createSlice({
@@ -18,4 +19,6 @@ export default systemsSlice.reducer;
 export const selectAvailableSystems = (state) => state.systems.systems;
 export const selectSystemById = (state, systemId) =>
     state.systems.systems.find(system => system.id === systemId);
+
+*/
 

@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 import {useSelector} from 'react-redux'
-import {selectSystemById} from "../../systems/systemsSlice";
+import {selectSystemById} from '../../systems/systemsApiSlice'
 import {useParams, useNavigate} from 'react-router-dom';
 import {Alert, AppBar, Collapse} from "@mui/material";
 import Button from "@mui/material/Button";
@@ -15,6 +15,7 @@ import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
 import InfoIcon from "@mui/icons-material/InfoOutlined";
 import MuiAppBar from "@mui/material/AppBar";
+import {selectCurrentUser} from "../../auth/authSlice";
 
 const SingleSystem = () => {
 
@@ -38,13 +39,24 @@ const SingleSystem = () => {
     const mdTheme = createTheme();
     const navigate = useNavigate();
     const {systemId} = useParams();
-
+    const user = useSelector(selectCurrentUser)
     const system = useSelector((state) => selectSystemById(state, Number(systemId)))
-    console.log("SYS ID; ", systemId)
-    console.log("SYSTEM, ", system)
+
     const [open, setOpen] = useState(true);
 
     const [openAlert, setOpenAlert] = useState(true);
+    let content;
+    if(user.is_staff) {
+       content =
+           <section>
+           <p>Place for drag and drop frame</p>
+       </section>
+    }else if(user.control_state === "single_controller"){
+       content =  <p>Show system with request control button</p>
+    }else if(user.control_state === "no_controller"){
+       content = <p>Show system with take control button</p>;
+    }
+
     return (
         <ThemeProvider theme={mdTheme}>
             <Box sx={{display: 'flex'}}>
@@ -72,7 +84,7 @@ const SingleSystem = () => {
                             noWrap
                             sx={{flexGrow: 1}}
                         >
-                            {system.name}
+                            NAME UNDEFINED
                         </Typography>
                         <UserMenu/>
                     </Toolbar>
@@ -89,20 +101,24 @@ const SingleSystem = () => {
                      }}
                 >
                     <Container maxWidth="lg">
-                        <Collapse in={openAlert}>
-                            <Alert severity="info" icon={false}
-                                   action={
-                                       <Button color="inherit" size="small"
-                                               onClick={() => navigate(`/systems/edit/${systemId}`)}>
-                                           EDIT
-                                       </Button>
-                                   }
-                            >
-                                You are viewing {system.name}. You can edit the system by clicking the Edit button.
-                            </Alert>
-                        </Collapse>
+                        {user.is_staff &&
+                            <Collapse in={openAlert}>
+                                <Alert severity="info" icon={false}
+                                       action={
+                                           <Button color="inherit" size="small"
+                                                   onClick={() => navigate(`/systems/edit/${systemId}`)}>
+                                               EDIT
+                                           </Button>
+                                       }
+                                >
+                                    You are viewing NAME UNDEFINED. You can edit the system by clicking the Edit button.
+                                </Alert>
+                            </Collapse>
+                        }
                         {!system &&
-                            <Grid item xs={12}>
+                            <Grid item xs={12} sx={{
+                                paddingTop: '20px',
+                            }}>
                                 {/*  if there is no system */}
                                 <InfoIcon/>
                                 <Typography variant="body1" gutterBottom>
@@ -110,9 +126,8 @@ const SingleSystem = () => {
                                 </Typography>
                             </Grid>
                         }
-                        <section>
-                            <p>Place for drag and drop frame</p>
-                        </section>
+                        {content}
+
                     </Container>
                 </Box>
             </Box>

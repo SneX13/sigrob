@@ -1,32 +1,35 @@
 import {apiSlice} from "../services/apiSlice";
 import {createSelector, createEntityAdapter} from "@reduxjs/toolkit";
-import {sub} from 'date-fns';
 
 /*Managing Normalizing Data with createEntityAdapter which accepts an options object that may include a sortComparer
 function, which will be used to keep the item IDs array in sorted order by comparing two items (and works the same way
 as Array.sort()).
 Read more here: https://redux.js.org/tutorials/essentials/part-6-performance-normalization#normalizing-data*/
-const systemsAdapter = createEntityAdapter({
-    sortComparer: (a, b) => b.date.localeCompare(a.date)
-})
+const systemsAdapter = createEntityAdapter();
 
 const initialState = systemsAdapter.getInitialState()
 
 export const systemsApiSlice = apiSlice.injectEndpoints({
     endpoints: builder => ({
-        getSystems: builder.mutation({
+      /*  getSystems: builder.mutation({
             query: id => ({
                 url: `/api/systems/?user=${id}`,
                 method: 'GET',
             }),
-            /*   transformResponse: responseData => {
-                   let min = 1;
-                   const loadedSystems = responseData.map(system => {
-                       if (!system?.date) system.date = sub(new Date(), {minutes: min++}).toISOString();
-                       return system;
-                   });
-                   return systemsAdapter.setAll(initialState, loadedSystems)
-               },*/
+            transformResponse: responseData => {
+                const loadedSystems = responseData;
+                return systemsAdapter.setAll(initialState, loadedSystems)
+            },
+            providesTags: (result, error, arg) => [
+                ...result.ids.map(id => ({type: 'System', id}))
+            ]
+        }),*/
+        getSystems: builder.query({
+            query: id => `/api/systems/?user=${id}`,
+            transformResponse: responseData => {
+                const loadedSystems = responseData;
+                return systemsAdapter.setAll(initialState, loadedSystems)
+            },
             providesTags: (result, error, arg) => [
                 ...result.ids.map(id => ({type: 'System', id}))
             ]
@@ -70,7 +73,7 @@ export const systemsApiSlice = apiSlice.injectEndpoints({
 })
 
 export const {
-    useGetSystemsMutation,
+    useGetSystemsQuery,
     useAddNewSystemMutation,
     useUpdateSystemMutation,
     useDeleteSystemMutation,
@@ -84,6 +87,7 @@ const selectSystemsData = createSelector(
     selectSystemsResult,
     systemsResult => systemsResult.data // normalized state object with ids & entities
 )
+//getSelectors creates following selectors and they are renamed with aliases using destructing
 export const {
     selectAll: selectAllSystems,
     selectById: selectSystemById,

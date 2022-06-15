@@ -1,5 +1,5 @@
-import React, {useEffect, useState} from 'react';
-import {useDispatch, useSelector} from "react-redux";
+import React, {useState} from 'react';
+import {useSelector} from "react-redux";
 import {selectCurrentUser, selectCurrentToken, setCredentials} from "../../auth/authSlice";
 import {styled, createTheme, ThemeProvider} from '@mui/material/styles';
 import MuiDrawer from '@mui/material/Drawer';
@@ -20,8 +20,7 @@ import AddIcon from '@mui/icons-material/Add';
 import UserMenu from "../UserMenu/UserMenu";
 import SystemsList from "../SystemsList/SystemsList";
 import CreateNewSystemModal from "../Modal/CreateNewSystemModal";
-import {systemsApiSlice, useGetSystemsMutation} from "../../systems/systemsApiSlice";
-import {selectAvailableSystems, setSystems} from "../../systems/systemsSlice";
+import {useGetSystemsQuery,} from "../../systems/systemsApiSlice";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import DashboardIcon from "@mui/icons-material/Dashboard";
@@ -76,44 +75,28 @@ const Drawer = styled(MuiDrawer, {shouldForwardProp: (prop) => prop !== 'open'})
 const mdTheme = createTheme();
 
 export default function Dashboard(props) {
+
     const [open, setOpen] = useState(true);
     const toggleDrawer = () => {
         setOpen(!open);
     };
-    const dispatch = useDispatch()
     const user = useSelector(selectCurrentUser)
-    const [getSystems] = useGetSystemsMutation();
-    const [openModal, setModalOpen] = useState(false);
-    const availableSystems = useSelector(selectAvailableSystems);
 
-    useEffect(() => {
-        handleFetchSystems();
-    }, []);
+    const {
+        data: systems,
+        isLoading,
+        isSuccess,
+        isError,
+        error
+    } = useGetSystemsQuery(user.id);
+
+    const [openModal, setModalOpen] = useState(false);
 
     const handleOpenModal = () => {
         setModalOpen(true);
     };
     const handleCloseModal = () => {
         setModalOpen(false);
-    };
-
-
-    const handleFetchSystems = async (event) => {
-        try {
-            const systems = await getSystems(user.id).unwrap();
-            dispatch(setSystems({systems}));
-        } catch (err) {
-            /*    if (!err?.originalStatus) {
-                    setErrMsg('No Server Response');
-                } else if (err.originalStatus === 400) {
-                    setErrMsg('Missing Systems');
-                } else if (err.originalStatus === 401) {
-                    setErrMsg('Unauthorized');
-                } else {
-                    setErrMsg('Failed');
-                }
-                errRef.current.focus();*/
-        }
     };
 
     return (
@@ -192,29 +175,32 @@ export default function Dashboard(props) {
                         overflow: 'auto',
                     }}
                 >
+
+
                     <Container maxWidth="lg" sx={{mt: 4, mb: 4}}>
-                        <Grid container spacing={3}>
-                            {user.is_staff && !availableSystems ?
-                                <Grid item xs={12}>
-                                    {/*  if there is no system */}
-                                    <InfoIcon/>
-                                    <Typography variant="body1" gutterBottom>
-                                        There is no system to show. <br/>
-                                        To create one, click on the Create New System button below.
-                                    </Typography>
-                                    <Button
-                                        onClick={handleOpenModal}
-                                        variant="contained"
-                                        sx={{mt: 3, mb: 2}}
-                                        startIcon={<AddIcon/>}
-                                    >
-                                        Create New System
-                                    </Button>
-                                </Grid>
-                                :
-                                <SystemsList admin={user.is_staff}/>
-                            }
-                        </Grid>
+                        {isSuccess &&
+                            <Grid container spacing={3}>
+                                {user.is_staff && !systems ?
+                                    <Grid item xs={12}>
+                                        {/*  if there is no system */}
+                                        <InfoIcon/>
+                                        <Typography variant="body1" gutterBottom>
+                                            There is no system to show. <br/>
+                                            To create one, click on the Create New System button below.
+                                        </Typography>
+                                        <Button
+                                            onClick={handleOpenModal}
+                                            variant="contained"
+                                            sx={{mt: 3, mb: 2}}
+                                            startIcon={<AddIcon/>}
+                                        >
+                                            Create New System
+                                        </Button>
+                                    </Grid>
+                                    :
+                                    <SystemsList admin={user.is_staff} systems={systems}/>
+                                }
+                            </Grid>}
                     </Container>
                 </Box>
                 <CreateNewSystemModal open={openModal} close={() => handleCloseModal()}/>
@@ -223,7 +209,3 @@ export default function Dashboard(props) {
     );
 }
 
-/*
-export default function Dashboard() {
-    return <DashboardContent/>;
-}*/

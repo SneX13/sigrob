@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {useSelector} from 'react-redux';
-import {selectSystemById} from "../../systems/systemsSlice";
+import {selectSystemById} from '../../systems/systemsApiSlice'
 import {useParams, useNavigate} from 'react-router-dom';
 import {createTheme, styled, ThemeProvider} from "@mui/material/styles";
 import Box from "@mui/material/Box";
@@ -23,6 +23,7 @@ import InfoIcon from "@mui/icons-material/InfoOutlined";
 import MuiAppBar from "@mui/material/AppBar";
 import MuiDrawer from "@mui/material/Drawer";
 import {useUpdateSystemMutation} from "../../systems/systemsApiSlice";
+import Link from "@mui/material/Link";
 
 const EditSystem = () => {
     const {systemId} = useParams()
@@ -33,26 +34,19 @@ const EditSystem = () => {
     const system = useSelector((state) => selectSystemById(state, Number(systemId)))
 
     const [name, setName] = useState(system?.name)
-    const [content, setContent] = useState(system?.body)
-    const [userId, setUserId] = useState(system?.userId)
 
-    const onContentChanged = e => setContent(e.target.value)
+    const [components, setComponents] = useState(system?.components)
 
-    const canSave = [name, content, userId].every(Boolean) && !isLoading;
+    const onContentChanged = e => setComponents(e.target.value)
 
     const saveSystem = async () => {
-        if (canSave) {
-            try {
-                await updateSystem({id: system.id, name, body: content, userId}).unwrap()
-
-                setName('')
-                setContent('')
-                setUserId('')
-                navigate(`/systems/${systemId}`)
-            } catch (err) {
-                console.error('Failed to save the system', err)
-            }
+        try {
+            await updateSystem({id: systemId, name, components}).unwrap()
+            navigate(`/systems/${systemId}`)
+        } catch (err) {
+            console.error('Failed to save the system', err)
         }
+
     }
     const drawerWidth = 240;
 
@@ -133,7 +127,7 @@ const EditSystem = () => {
                             noWrap
                             sx={{flexGrow: 1}}
                         >
-                            {system.name}
+                            {system ? system.name : "System Name Undefined"}
                         </Typography>
                         <UserMenu/>
                     </Toolbar>
@@ -194,18 +188,25 @@ const EditSystem = () => {
                      }}
                 >
                     <Container maxWidth="lg">
-                        {!system &&
-                            <Grid item xs={12}>
+                        {!system ?
+                            <Grid item xs={12} sx={{
+                                paddingY: '20px',
+                            }}>
                                 {/*  if there is no system */}
                                 <InfoIcon/>
                                 <Typography variant="body1" gutterBottom>
                                     System not found.<br/>
                                 </Typography>
+                                <Link onClick={() => navigate(-1)}>
+                                    Return to Dashboard
+                                </Link>
                             </Grid>
+                            :
+                            <section>
+                                <p>Place for drag and drop frame</p>
+                            </section>
                         }
-                        <section>
-                            <p>Place for drag and drop frame</p>
-                        </section>
+
                     </Container>
                 </Box>
             </Box>

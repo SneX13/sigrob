@@ -12,7 +12,7 @@ export default function CreateNewSystemModal(props) {
     const [name, setName] = useState("");
     const [loading, setLoading] = useState(false);
     const [errMsg, setErrMsg] = useState('');
-    const [addNewSystem, {isLoading}] = useAddNewSystemMutation();
+    const [addNewSystem] = useAddNewSystemMutation();
 
     useEffect(() => {
         setErrMsg('')
