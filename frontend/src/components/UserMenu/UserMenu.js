@@ -11,8 +11,11 @@ import Settings from '@mui/icons-material/Settings';
 import Logout from '@mui/icons-material/Logout';
 import UserIcon from '@mui/icons-material/PersonOutlineOutlined';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import {useNavigate} from "react-router-dom";
+import {useDispatch, useSelector} from "react-redux";
+import {logOut, selectCurrentUser} from "../../auth/authSlice";
 
-export default function UserMenu() {
+export default function UserMenu(props) {
     const [anchorEl, setAnchorEl] = React.useState(null);
     const open = Boolean(anchorEl);
     const handleClick = (event) => {
@@ -21,11 +24,21 @@ export default function UserMenu() {
     const handleClose = () => {
         setAnchorEl(null);
     };
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
+    const user = useSelector(selectCurrentUser);
+    const userName = user.first_name + ' ' + user.last_name;
+    const userRole = user.is_staff ? "Admin" : "Viewer";
+
+    const logOutUser = () => {
+        dispatch(logOut);
+        navigate("/login");
+    }
     return (
         <React.Fragment>
             <Box sx={{display: 'flex', alignItems: 'center', textAlign: 'center'}}>
                 {/* todo: Fetch user Name */}
-                <Typography sx={{minWidth: 100}}>User Name</Typography>
+                <Typography sx={{minWidth: 100}}>{userName}</Typography>
                 <Tooltip title="User settings">
                     <IconButton
                         color="inherit"
@@ -36,7 +49,7 @@ export default function UserMenu() {
                         aria-haspopup="true"
                         aria-expanded={open ? 'true' : undefined}
                     >
-                        <Avatar sx={{width: 32, height: 32}} >
+                        <Avatar sx={{width: 32, height: 32}}>
                             <UserIcon/>
                         </Avatar>
                     </IconButton>
@@ -82,16 +95,16 @@ export default function UserMenu() {
                         <LockOutlinedIcon fontSize="small"/>
                     </ListItemIcon>
                     {/* todo: fetch user role */}
-                    Logged in as User Role
+                    Logged in as {userRole}
                 </MenuItem>
                 <MenuItem>
+                    {/* Functionalities for this not included in this app version */}
                     <ListItemIcon>
                         <Settings fontSize="small"/>
                     </ListItemIcon>
                     Settings & Preferences
                 </MenuItem>
-                <MenuItem>
-                    {/* todo: logout the user */}
+                <MenuItem onClick={logOutUser}>
                     <ListItemIcon>
                         <Logout fontSize="small"/>
                     </ListItemIcon>
