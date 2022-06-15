@@ -24,6 +24,7 @@ import MuiAppBar from "@mui/material/AppBar";
 import MuiDrawer from "@mui/material/Drawer";
 import {useUpdateSystemMutation} from "../../systems/systemsApiSlice";
 import Link from "@mui/material/Link";
+import DragAndDrop from "../../components/DragAndDrop/DragAndDrop";
 
 const EditSystem = () => {
     const {systemId} = useParams()
@@ -102,7 +103,7 @@ const EditSystem = () => {
     return (
         <ThemeProvider theme={mdTheme}>
             <Box sx={{display: 'flex'}}>
-                <AppBar position="absolute" open={system ? open : !open}>
+                <AppBar position="absolute" open={!system ? open : !open}>
                     <Toolbar
                         sx={{
                             pr: '24px', // keep right padding when drawer closed
@@ -132,8 +133,8 @@ const EditSystem = () => {
                         <UserMenu/>
                     </Toolbar>
                 </AppBar>
-                {system &&
-                    <Drawer variant="permanent" open={system ? open : !open}>
+                {!system &&
+                    <Drawer variant="permanent" open={!system ? open : !open}>
                         <Toolbar
                             sx={{
                                 display: 'flex',
@@ -188,7 +189,7 @@ const EditSystem = () => {
                      }}
                 >
                     <Container maxWidth="lg">
-                        {!system ?
+                        {system ?
                             <Grid item xs={12} sx={{
                                 paddingY: '20px',
                             }}>
@@ -202,9 +203,7 @@ const EditSystem = () => {
                                 </Link>
                             </Grid>
                             :
-                            <section>
-                                <p>Place for drag and drop frame</p>
-                            </section>
+                            <DragAndDrop/>
                         }
 
                     </Container>

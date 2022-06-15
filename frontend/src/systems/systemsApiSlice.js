@@ -42,7 +42,6 @@ export const systemsApiSlice = apiSlice.injectEndpoints({
                     ...initialSystem,
                 }
             }),
-
             invalidatesTags: [
                 {type: 'System', id: "LIST"}
             ]
