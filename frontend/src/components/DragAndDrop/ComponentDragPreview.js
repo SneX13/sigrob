@@ -16,7 +16,7 @@ export const ComponentDragPreview = memo(function ComponentDragPreview({ title }
     )
     return (
         <div style={styles}>
-            <Component title={title} yellow={tickTock} preview />
+            <Component name={title} yellow={tickTock} preview />
         </div>
     )
 })

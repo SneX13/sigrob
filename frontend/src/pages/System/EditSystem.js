@@ -25,8 +25,45 @@ import MuiDrawer from "@mui/material/Drawer";
 import {useUpdateSystemMutation} from "../../systems/systemsApiSlice";
 import Link from "@mui/material/Link";
 import DragAndDrop from "../../components/DragAndDrop/DragAndDrop";
+import {HTML5Backend} from "react-dnd-html5-backend";
+import {DndProvider, useDrop} from "react-dnd";
+import Card from "../../components/SystemsList/SystemCard";
+import LightModeIcon from '@mui/icons-material/LightMode';
+import kuka from '../../../src/tempImg/kuka_robot.png'
+import conveyer from '../../../src/tempImg/conveyor_line.jpeg'
+import light from '../../../src/tempImg/light.png'
+import {ListItemAvatar} from "@mui/material";
+import Avatar from "@mui/material/Avatar";
+import {DraggableComponent} from "../../components/DragAndDrop/DraggableComponent";
+import {useCallback} from "react";
+import update from "immutability-helper";
+import {ItemTypes} from "../../components/DragAndDrop/ItemTypes";
 
 const EditSystem = () => {
+
+    const [componentsList, setComponentsList] = useState([
+        {
+            id: 1,
+            name: 'Conveyor line',
+            image: conveyer,
+            x: null,
+            y: null,
+        },
+        {
+            id: 2,
+            name: 'KUKA robot',
+            image: kuka,
+            x: null,
+            y: null,
+        },
+        {
+            id: 3,
+            name: 'Light',
+            image: light,
+            x: null,
+            y: null,
+        },
+    ])
     const {systemId} = useParams()
     const navigate = useNavigate()
 
@@ -101,7 +138,9 @@ const EditSystem = () => {
         setOpen(!open);
     };
     return (
+
         <ThemeProvider theme={mdTheme}>
+
             <Box sx={{display: 'flex'}}>
                 <AppBar position="absolute" open={!system ? open : !open}>
                     <Toolbar
@@ -133,50 +172,6 @@ const EditSystem = () => {
                         <UserMenu/>
                     </Toolbar>
                 </AppBar>
-                {!system &&
-                    <Drawer variant="permanent" open={!system ? open : !open}>
-                        <Toolbar
-                            sx={{
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'flex-end',
-                                px: [1],
-                            }}
-                        >
-                            <IconButton onClick={toggleDrawer}>
-                                <ChevronLeftIcon/>
-                            </IconButton>
-                        </Toolbar>
-                        <Divider/>
-                        <List component="nav">
-                            { /*todo: add components list here*/}
-                            <ListItemButton>
-                                <ListItemIcon>
-
-                                </ListItemIcon>
-                                <ListItemText primary="Conveyor line"/>
-                            </ListItemButton>
-                            <ListItemButton>
-                                <ListItemIcon>
-                                    <RobotIcon/>
-                                </ListItemIcon>
-                                <ListItemText primary="KUKA robot"/>
-                            </ListItemButton>
-                            <ListItemButton>
-                                <ListItemIcon>
-
-                                </ListItemIcon>
-                                <ListItemText primary="Light"/>
-                            </ListItemButton>
-                            <ListItemButton onClick={() => navigate(-1)}>
-                                <ListItemIcon>
-                                    <DashboardIcon/>
-                                </ListItemIcon>
-                                <ListItemText primary="Return to Dashboard"/>
-                            </ListItemButton>
-                        </List>
-                    </Drawer>
-                }
                 <Box component="main"
                      sx={{
                          backgroundColor: (theme) =>
@@ -209,7 +204,9 @@ const EditSystem = () => {
                     </Container>
                 </Box>
             </Box>
+
         </ThemeProvider>
+
     )
 }
 

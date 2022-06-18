@@ -46,15 +46,15 @@ const SingleSystem = () => {
 
     const [openAlert, setOpenAlert] = useState(true);
     let content;
-    if(user.is_staff) {
-       content =
-           <section>
-           <p>Place for drag and drop frame</p>
-       </section>
-    }else if(user.control_state === "single_controller"){
-       content =  <p>Show system with request control button</p>
-    }else if(user.control_state === "no_controller"){
-       content = <p>Show system with take control button</p>;
+    if (user.is_staff) {
+        content =
+            <section>
+                <p>Place for drag and drop frame.</p>
+            </section>
+    } else if (user.user_in_control !== user.id && user.user_in_control !== null) {
+        content = <p>Show system with request control button</p>
+    } else if (user.control_state === "no_controller" || user.user_in_control === null) {
+        content = <p>Show system with take control button</p>;
     }
 
     return (

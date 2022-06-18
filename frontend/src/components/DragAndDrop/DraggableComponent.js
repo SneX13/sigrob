@@ -3,6 +3,10 @@ import { useDrag } from 'react-dnd'
 import { getEmptyImage } from 'react-dnd-html5-backend'
 import { ItemTypes } from './ItemTypes.js'
 import {Component} from "./Component";
+import ListItemButton from "@mui/material/ListItemButton";
+import {ListItemAvatar} from "@mui/material";
+import Avatar from "@mui/material/Avatar";
+import ListItemText from "@mui/material/ListItemText";
 function getStyles(left, top, isDragging) {
     const transform = `translate3d(${left}px, ${top}px, 0)`
     return {
@@ -16,16 +20,17 @@ function getStyles(left, top, isDragging) {
     }
 }
 export const DraggableComponent = memo(function DraggableComponent(props) {
-    const { id, title, left, top } = props
+    const { id, name, left, top, image } = props
+
     const [{ isDragging }, drag, preview] = useDrag(
         () => ({
-            type: ItemTypes.BOX,
-            item: { id, left, top, title },
+            type: ItemTypes.IMAGE,
+            item: { id, left, top, name, image },
             collect: (monitor) => ({
                 isDragging: monitor.isDragging(),
             }),
         }),
-        [id, left, top, title],
+        [id, left, top, name, image],
     )
     useEffect(() => {
         preview(getEmptyImage(), { captureDraggingState: true })
@@ -33,10 +38,10 @@ export const DraggableComponent = memo(function DraggableComponent(props) {
     return (
         <div
             ref={drag}
-            style={getStyles(left, top, isDragging)}
+           // style={getStyles(left, top, isDragging)}
             role="DraggableBox"
         >
-            <Component title={title} />
+           <Component name={name} image={image} />
         </div>
     )
 })

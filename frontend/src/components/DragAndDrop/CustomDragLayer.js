@@ -35,8 +35,8 @@ export const CustomDragLayer = (props) => {
         }))
     function renderItem() {
         switch (itemType) {
-            case ItemTypes.BOX:
-                return <ComponentDragPreview title={item.title} />
+            case ItemTypes.IMAGE:
+                return <ComponentDragPreview title={item.name} />
             default:
                 return null
         }
