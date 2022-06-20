@@ -1,26 +1,22 @@
-import { memo } from 'react'
-import ListItemButton from "@mui/material/ListItemButton";
-import {ListItem, ListItemAvatar} from "@mui/material";
+import React, {memo} from 'react';
 import Avatar from "@mui/material/Avatar";
-import ListItemText from "@mui/material/ListItemText";
-const styles = {
-    border: '1px dashed gray',
-    padding: '0.5rem 1rem',
-    cursor: 'move',
-}
-export const Component = memo(function Component({ name, image, yellow, preview }) {
-    const backgroundColor = yellow ? 'yellow' : 'white'
+
+
+export const Component = memo(function Component({id, name, image, preview}) {
+    function getStyles(left, top, isDragging) {
+        return {
+            cursor: 'move',
+            /*top: top,
+            left: left,
+            // IE fallback: hide the real node using CSS when dragging
+            // because IE will ignore our custom "empty image" drag preview.*/
+            opacity: isDragging ? 0.5 : 1,
+
+        }
+    }
     return (
-        <div
-            style={{backgroundColor }}
-            role={preview ? 'ComponentPreview' : 'Component'}
-        >
-            <ListItem>
-                <ListItemAvatar>
-                    <Avatar alt={name} src={image}/>
-                </ListItemAvatar>
-                <ListItemText primary={name}/>
-            </ListItem>
-        </div>
+
+        <Avatar variant="square" id={id} alt={name} src={image} role={preview ? 'ComponentPreview' : 'Component'}
+                sx={getStyles()}/>
     )
 })

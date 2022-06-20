@@ -46,8 +46,8 @@ function Dragdrop() {
         }
       ]  )
 
-    const pictures = dragList.map(picture => <Picture key={picture.id} src={picture.image} id={picture.id}
-                                                      name={picture.name}/>)
+   /* const pictures = dragList.map(picture => <Picture key={picture.id} src={picture.image} id={picture.id}
+                                                      name={picture.name}/>)*/
 
     const [board, setBoard] = useState([])
    const [{isOver, results}, drop] = useDrop(() => ({
@@ -58,33 +58,6 @@ function Dragdrop() {
             results: monitor.getDropResult()
         }),
     }))
-    const moveBox = useCallback(
-        (id, left, top) => {
-            setDragList(
-                update(dragList, {
-                    [id]: {
-                        $merge: {left, top},
-                    },
-                }),
-            )
-        },
-        [dragList],
-    )
-/*    const [, drop] = useDrop(
-        () => ({
-            accept: ItemTypes.IMAGE,
-            drop(item, monitor) {
-                const delta = monitor.getDifferenceFromInitialOffset()
-                let left = Math.round(item.left + delta.x)
-                let top = Math.round(item.top + delta.y)
-                moveBox(item.id, left, top)
-                const results = monitor.getDropResult()
-                console.log("RESUKTS FROM DROP: ", results)
-                return undefined
-            },
-        }),
-        [moveBox],
-    )*/
 
 
     const navigate = useNavigate()
@@ -121,6 +94,8 @@ function Dragdrop() {
                 </List>
             </Grid>
             <Grid item xs={12} md={10}>
+
+
                 <Box ref={drop} mb={4} sx={{
                     height: '50vw',
                     border: '1px solid black',

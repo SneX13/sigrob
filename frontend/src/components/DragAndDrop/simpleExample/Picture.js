@@ -4,6 +4,7 @@ import {ListItem, ListItemAvatar} from "@mui/material";
 import Avatar from "@mui/material/Avatar";
 import ListItemText from "@mui/material/ListItemText";
 import {ItemTypes} from "./ItemTypes";
+
 export function Picture(props) {
     const {id, name, left, top, src} = props
 
@@ -29,7 +30,7 @@ export function Picture(props) {
     }
 
     return (
-        <Avatar ref={drag} src={src} alt={name} src={src}
+        <Avatar variant="square" ref={drag} alt={name} src={src}
                 sx={getStyles(left, top, isDragging, dropped)}/>
 
     )
