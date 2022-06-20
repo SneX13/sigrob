@@ -1,7 +1,7 @@
 import { memo, useEffect } from 'react'
 import { useDrag } from 'react-dnd'
 import { getEmptyImage } from 'react-dnd-html5-backend'
-import { ItemTypes } from './ItemTypes.js'
+import { ItemTypes } from './simpleExample/ItemTypes.js'
 import {Component} from "./Component";
 import ListItemButton from "@mui/material/ListItemButton";
 import {ListItemAvatar} from "@mui/material";

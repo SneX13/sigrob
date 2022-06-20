@@ -1,6 +1,6 @@
 import { useDragLayer } from 'react-dnd'
 import {ComponentDragPreview} from './ComponentDragPreview'
-import { ItemTypes } from './ItemTypes.js'
+import { ItemTypes } from './simpleExample/ItemTypes.js'
 
 const layerStyles = {
     position: 'fixed',

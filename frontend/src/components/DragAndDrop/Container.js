@@ -2,7 +2,7 @@ import update from 'immutability-helper'
 import React, {useCallback, useState, useEffect} from 'react'
 import {useDrop} from 'react-dnd'
 import {DraggableComponent} from './DraggableComponent.js'
-import {ItemTypes} from './ItemTypes.js'
+import {ItemTypes} from './simpleExample/ItemTypes.js'
 import Box from "@mui/material/Box";
 import {Drawer} from "@mui/material";
 import Toolbar from "@mui/material/Toolbar";

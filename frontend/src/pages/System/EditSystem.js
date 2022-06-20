@@ -37,7 +37,7 @@ import Avatar from "@mui/material/Avatar";
 import {DraggableComponent} from "../../components/DragAndDrop/DraggableComponent";
 import {useCallback} from "react";
 import update from "immutability-helper";
-import {ItemTypes} from "../../components/DragAndDrop/ItemTypes";
+import {ItemTypes} from "../../components/DragAndDrop/simpleExample/ItemTypes";
 
 const EditSystem = () => {
 

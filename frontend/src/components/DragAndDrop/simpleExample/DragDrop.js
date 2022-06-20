@@ -17,7 +17,7 @@ import {ListItem, ListItemAvatar} from "@mui/material";
 import Avatar from "@mui/material/Avatar";
 import Grid from "@mui/material/Grid";
 import * as PropTypes from "prop-types";
-import {ItemTypes} from "../ItemTypes";
+import {ItemTypes} from "./ItemTypes";
 
 import update from "immutability-helper";
 
