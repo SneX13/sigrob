@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useState, useCallback} from 'react'
 import {Picture} from './Picture'
 import {useDrop} from 'react-dnd'
 import conveyer from "../../../tempImg/conveyor_line.jpeg";
@@ -15,45 +15,78 @@ import ListItemText from "@mui/material/ListItemText";
 import {useNavigate} from "react-router-dom";
 import {ListItem, ListItemAvatar} from "@mui/material";
 import Avatar from "@mui/material/Avatar";
+import Grid from "@mui/material/Grid";
+import * as PropTypes from "prop-types";
+import {ItemTypes} from "../ItemTypes";
 
-const dragList = [
-    {
-        id: 1,
-        name: 'Conveyor line',
-        image: conveyer,
-        left: 0,
-        top: 0,
-    },
-    {
-        id: 2,
-        name: 'KUKA robot',
-        image: kuka,
-        left: 0,
-        top: 0,
-    },
-    {
-        id: 3,
-        name: 'Light',
-        image: light,
-        left: 0,
-        top: 0,
-    }
-
-]
-
-const pictures = dragList.map(picture => <Picture key={picture.id} src={picture.image} id={picture.id}
-                                                  name={picture.name}/>)
+import update from "immutability-helper";
 
 function Dragdrop() {
+    const [dragList, setDragList] = useState([
+       {
+            id: 1,
+            name: 'Conveyor line',
+            image: conveyer,
+            left: 0,
+            top: 0,
+        },
+      {
+            id: 2,
+            name: 'KUKA robot',
+            image: kuka,
+            left: 0,
+            top: 0,
+        },
+       {
+            id: 3,
+            name: 'Light',
+            image: light,
+            left: 0,
+            top: 0,
+        }
+      ]  )
+
+    const pictures = dragList.map(picture => <Picture key={picture.id} src={picture.image} id={picture.id}
+                                                      name={picture.name}/>)
 
     const [board, setBoard] = useState([])
-    const [{isOver}, drop] = useDrop(() => ({
+   const [{isOver, results}, drop] = useDrop(() => ({
         accept: "image",
         drop: (item) => addImage(item.id),
         collect: (monitor) => ({
             isOver: !!monitor.isOver(),
+            results: monitor.getDropResult()
         }),
     }))
+    const moveBox = useCallback(
+        (id, left, top) => {
+            setDragList(
+                update(dragList, {
+                    [id]: {
+                        $merge: {left, top},
+                    },
+                }),
+            )
+        },
+        [dragList],
+    )
+/*    const [, drop] = useDrop(
+        () => ({
+            accept: ItemTypes.IMAGE,
+            drop(item, monitor) {
+                const delta = monitor.getDifferenceFromInitialOffset()
+                let left = Math.round(item.left + delta.x)
+                let top = Math.round(item.top + delta.y)
+                moveBox(item.id, left, top)
+                const results = monitor.getDropResult()
+                console.log("RESUKTS FROM DROP: ", results)
+                return undefined
+            },
+        }),
+        [moveBox],
+    )*/
+
+
     const navigate = useNavigate()
     const addImage = (id) => {
         const droppedPictures = dragList.filter(picture => id === picture.id)
@@ -62,28 +95,41 @@ function Dragdrop() {
 
     const boardImages = board.map(picture => <Picture src={picture.image} id={picture.id}/>)
     return (
-        <div className='container'>
-            <List>
-                {dragList.map(picture =>
-                    <Picture key={picture.id} src={picture.image} id={picture.id} name={picture.name}/>)}
+        <Grid container spacing={2} maxWidth="lg" sx={{mt: 4, mb: 4}} >
+            <Grid item xs={12} md={2}>
+                <List xs={6}>
+                    {dragList.map(picture =>
+                        <ListItem
+                            key={picture.id}
+                        >
+                            <ListItemAvatar>
+                                <Picture id={picture.id} name={picture.name} src={picture.image}  />
+                            </ListItemAvatar>
+                            <ListItemText primary={picture.name}/>
+                        </ListItem>
+                    )
+                    }
 
 
-                <Divider light/>
-                <ListItemButton onClick={() => navigate(-1)}>
-                    <ListItemIcon>
-                        <DashboardIcon/>
-                    </ListItemIcon>
-                    <ListItemText primary="Return to Dashboard"/>
-                </ListItemButton>
-            </List>
-            <Box ref={drop} mb={4} sx={{
-                height: '50vw',
-                border: '1px solid black',
-                position: 'relative'
-            }}>
-                {boardImages}
-            </Box>
-        </div>
+                    <Divider light/>
+                    <ListItemButton onClick={() => navigate(-1)}>
+                        <ListItemIcon>
+                            <DashboardIcon/>
+                        </ListItemIcon>
+                        <ListItemText primary="Return to Dashboard"/>
+                    </ListItemButton>
+                </List>
+            </Grid>
+            <Grid item xs={12} md={10}>
+                <Box ref={drop} mb={4} sx={{
+                    height: '50vw',
+                    border: '1px solid black',
+                    position: 'relative'
+                }}>
+                    {boardImages}
+                </Box>
+            </Grid>
+        </Grid>
     )
 }
 
