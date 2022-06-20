@@ -32,6 +32,7 @@ export const DraggableComponent = memo(function DraggableComponent(props) {
             // because IE will ignore our custom "empty image" drag preview.
             opacity: isDragging ? 0.5 : 1,
             cursor: 'move',
+            height: 'auto'
         }
     }
 
