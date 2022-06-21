@@ -1,5 +1,5 @@
 import update from 'immutability-helper'
-import React, {useCallback, useState} from 'react'
+import React, {useCallback, useReducer, useState} from 'react'
 import {useDrop} from 'react-dnd'
 import {DraggableComponent} from './DraggableComponent.js'
 import {ItemTypes} from './simpleExample/ItemTypes.js'
@@ -30,28 +30,25 @@ export const Container = () => {
      }, []);*/
     const [componentsList, setComponentsList] = useState({
         1: {
-            id: 1,
             name: 'Conveyor line',
             image: conveyer,
             left: 0,
             top: 0,
         },
         2: {
-            id: 2,
             name: 'KUKA robot',
             image: kuka,
             left: 0,
             top: 0,
         },
         3: {
-            id: 3,
             name: 'Light',
             image: light,
             left: 0,
             top: 0,
         },
     })
-
+    const [board, setBoard] = useState([])
     const moveComponent = useCallback(
         (id, left, top) => {
             setComponentsList(
@@ -72,6 +69,7 @@ export const Container = () => {
                 let left = Math.round(item.left + delta.x)
                 let top = Math.round(item.top + delta.y)
                 moveComponent(item.id, left, top)
+                addImage(item.id)
                 return undefined
             },
         }),
@@ -79,6 +77,18 @@ export const Container = () => {
     )
     const navigate = useNavigate()
 
+    const addImage = (id) => {
+        const droppedPictures = Object.fromEntries(
+            Object.entries(componentsList)
+                .filter(([key, value]) => key === id))
+
+        //setBoard(board => [...board, droppedPictures])
+        setBoard(droppedPictures)
+
+    }
+
+    const boardImages = Object.keys(board).map((key) =>
+        <DraggableComponent id={key} image={componentsList[key].image}/>)
     return (
         <Grid container spacing={2} maxWidth="lg" sx={{mt: 4, mb: 4}}>
             <Grid item xs={12} md={2}>
@@ -110,9 +120,7 @@ export const Container = () => {
                     border: '1px solid black',
                     position: 'relative'
                 }}>
-                    {Object.keys(componentsList).map((key) => (
-                        <DraggableComponent key={key} id={key} {...componentsList[key]} />
-                    ))}
+                    {boardImages}
                 </Box>
                 <CustomDragLayer/>
             </Grid>
