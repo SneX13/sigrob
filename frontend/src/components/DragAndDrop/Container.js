@@ -14,10 +14,15 @@ import ListItemText from "@mui/material/ListItemText";
 import conveyer from "../../tempImg/svgs/conveyer_belt.svg";
 import kuka from "../../tempImg/svgs/kuka_robot.svg";
 import light from "../../tempImg/svgs/yellow_light.svg";
-import {useNavigate} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import {CustomDragLayer} from "./CustomDragLayer";
+import {setCredentials} from "../../auth/authSlice";
+import {store} from "../../store/store";
+import {systemsApiSlice} from "../../systems/systemsApiSlice";
+import {apiSlice} from "../../services/apiSlice";
 
 export const Container = () => {
+    const {systemId} = useParams();
     /* const [listOfImages, setListOfImages] = useState();
 
      function importAll(r) {
@@ -31,18 +36,21 @@ export const Container = () => {
     const [componentsList, setComponentsList] = useState({
         1: {
             name: 'Conveyor line',
+            original_name: 'conveyer_belt',
             image: conveyer,
             left: 0,
             top: 0,
         },
         2: {
             name: 'KUKA robot',
+            original_name: 'kuka_robot',
             image: kuka,
             left: 0,
             top: 0,
         },
         3: {
             name: 'Light',
+            original_name: 'yellow_light',
             image: light,
             left: 0,
             top: 0,
@@ -70,6 +78,7 @@ export const Container = () => {
                 let top = Math.round(item.top + delta.y)
                 moveComponent(item.id, left, top)
                 addImage(item.id)
+                sendToBackend(item)
                 return undefined
             },
         }),
@@ -84,8 +93,38 @@ export const Container = () => {
 
         //setBoard(board => [...board, droppedPictures])
         setBoard(droppedPictures)
+        console.log("DROPED PICS:", droppedPictures)
+        console.log("BOARD IS, ", board)
 
     }
+    const sendToBackend = async (component) => {
+        console.log(component)
+        console.log(component.name, component.image, component.left, component.top, systemId)
+
+        /*  system: systemId,
+              name:original_name,
+          image:image
+          x_position:left,
+          y_position:top*/
+        try {
+            //const response = await createSystem({component}).unwrap();
+          /*apiSlice.injectEndpoints({
+                endpoints: builder => ({
+                    component: builder.mutation({
+                        query: componentData => ({
+                            url: '/api/login/',
+                            method: 'POST',
+                            body: { ...componentData }
+                        })
+                    }),
+                })
+            })*/
+            //dispatche something to store or not?
+
+        } catch (err) {
+            console.log("Error when creating or updating the system. " + err)
+        }
+    };
 
     const boardImages = Object.keys(board).map((key) =>
         <DraggableComponent id={key} image={componentsList[key].image}/>)
