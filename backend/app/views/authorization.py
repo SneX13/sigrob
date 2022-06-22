@@ -89,7 +89,7 @@ class LoginAttempt(APIView):
                                      )
         else:
             return http.HttpResponse(
-                f"Wrong password for email '{email}'."
+                f"Email and password combination is not correct."
             )
 
 
