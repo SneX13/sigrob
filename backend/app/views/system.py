@@ -8,6 +8,26 @@ from ..models import User, System
 from ..serializers import SystemSerializer
 
 
+class OneSystem(APIView):
+    @staticmethod
+    def get(request: WSGIRequest) -> HttpResponse:
+        get_id = "id"
+        try:
+            if request.body:
+                body = JSONParser().parse(request)
+                id_ = body.get(get_id)
+            else:
+                id_ = request.GET.get(get_id)
+        except KeyError:
+            return HttpResponseBadRequest(
+                "Get system request should contain the ID field of the system."
+            )
+        system = System.objects.get(id=id_)
+        system_serializer = SystemSerializer(system, many=False)
+        json_data = JSONRenderer().render(system_serializer.data)
+        return HttpResponse(json_data)
+
+
 class SystemTable(APIView):
     @staticmethod
     def get(request: WSGIRequest) -> HttpResponse:
