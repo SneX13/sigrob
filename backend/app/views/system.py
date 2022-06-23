@@ -4,8 +4,8 @@ from rest_framework.parsers import JSONParser
 from rest_framework.renderers import JSONRenderer
 from rest_framework.views import APIView
 
-from ..models import User, System
-from ..serializers import SystemSerializer
+from ..models import User, System, Component
+from ..serializers import SystemSerializer, ComponentSerializer
 
 
 class OneSystem(APIView):
@@ -23,9 +23,12 @@ class OneSystem(APIView):
                 "Get system request should contain the ID field of the system."
             )
         system = System.objects.get(id=id_)
+        system_components = Component.objects.filter(system=system)
         system_serializer = SystemSerializer(system, many=False)
-        json_data = JSONRenderer().render(system_serializer.data)
-        return HttpResponse(json_data)
+        component_serializer = ComponentSerializer(system_components, many=True)
+        json_system = JSONRenderer().render(system_serializer.data)
+        json_components = JSONRenderer().render(component_serializer.data)
+        return HttpResponse(json_system + json_components)
 
 
 class SystemTable(APIView):
