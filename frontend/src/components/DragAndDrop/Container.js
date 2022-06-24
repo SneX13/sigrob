@@ -108,7 +108,7 @@ export const Container = () => {
                     ))
                     }
                     <Divider light/>
-                    <ListItemButton onClick={() => navigate(-1)}>
+                    <ListItemButton onClick={() => navigate('/admin')}>
                         <ListItemIcon>
                             <DashboardIcon/>
                         </ListItemIcon>
