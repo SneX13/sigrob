@@ -9,14 +9,6 @@ import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
 import Typography from "@mui/material/Typography";
 import UserMenu from "../../components/UserMenu/UserMenu";
-import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
-import Divider from "@mui/material/Divider";
-import List from "@mui/material/List";
-import ListItemButton from "@mui/material/ListItemButton";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import ListItemText from "@mui/material/ListItemText";
-import RobotIcon from "@mui/icons-material/PrecisionManufacturingOutlined";
-import DashboardIcon from "@mui/icons-material/Dashboard";
 import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
 import InfoIcon from "@mui/icons-material/InfoOutlined";
@@ -25,19 +17,9 @@ import MuiDrawer from "@mui/material/Drawer";
 import {useUpdateSystemMutation} from "../../systems/systemsApiSlice";
 import Link from "@mui/material/Link";
 import DragAndDrop from "../../components/DragAndDrop/DragAndDrop";
-import {HTML5Backend} from "react-dnd-html5-backend";
-import {DndProvider, useDrop} from "react-dnd";
-import Card from "../../components/SystemsList/SystemCard";
-import LightModeIcon from '@mui/icons-material/LightMode';
 import kuka from '../../../src/tempImg/kuka_robot.png'
 import conveyer from '../../../src/tempImg/conveyor_line.jpeg'
 import light from '../../../src/tempImg/light.png'
-import {ListItemAvatar} from "@mui/material";
-import Avatar from "@mui/material/Avatar";
-import {DraggableComponent} from "../../components/DragAndDrop/DraggableComponent";
-import {useCallback} from "react";
-import update from "immutability-helper";
-import {ItemTypes} from "../../components/DragAndDrop/simpleExample/ItemTypes";
 
 const EditSystem = () => {
 

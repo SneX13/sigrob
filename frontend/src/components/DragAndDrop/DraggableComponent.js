@@ -1,8 +1,8 @@
 import React, {memo, useEffect} from 'react'
 import {useDrag} from 'react-dnd'
 import {getEmptyImage} from 'react-dnd-html5-backend'
-import {ItemTypes} from './simpleExample/ItemTypes.js'
-import Avatar from "@mui/material/Avatar";
+import {ItemTypes} from './ItemTypes.js'
+import {Component} from "./Component";
 
 
 export const DraggableComponent = memo(function DraggableComponent(props) {
@@ -13,7 +13,7 @@ export const DraggableComponent = memo(function DraggableComponent(props) {
             item: {id, name, left, top, image},
             collect: (monitor) => ({
                 isDragging: monitor.isDragging(),
-                dropped: monitor.didDrop()
+                dropped: monitor.didDrop(),
             }),
         }),
         [id, name, left, top, image],
@@ -22,7 +22,7 @@ export const DraggableComponent = memo(function DraggableComponent(props) {
         preview(getEmptyImage(), {captureDraggingState: true})
     }, [])
 
-    function getStyles(left, top, isDragging) {
+    function getStyles(left, top, isDragging, dropped) {
         const transform = `translate3d(${left}px, ${top}px, 0)`
         return {
             position: dropped ? 'absolute' : 'relative',
@@ -31,14 +31,16 @@ export const DraggableComponent = memo(function DraggableComponent(props) {
             // IE fallback: hide the real node using CSS when dragging
             // because IE will ignore our custom "empty image" drag preview.
             opacity: isDragging ? 0.5 : 1,
-            cursor: 'move',
-            height: 'auto'
+            height: 'auto',
         }
     }
 
     return (
-        <Avatar ref={drag} variant="square" alt={name} src={image}
-                role={preview ? 'ComponentPreview' : 'Component'}
-                sx={getStyles(isDragging, dropped)}/>
+        <div ref={drag}
+             sx={getStyles(left, top, isDragging, dropped)}
+             role="DraggableComponent">
+            <Component image={image}/>
+        </div>
+
     )
 })

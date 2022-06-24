@@ -7,12 +7,7 @@ export default function DragAndDrop() {
 
     return (
         <DndProvider backend={HTML5Backend}>
-            <p>
-                Drag components from the left to crate a system.
-            </p>
             <Container/>
-
-            {/*  <DragDrop/>*/}
         </DndProvider>
     );
 }

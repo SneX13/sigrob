@@ -1,5 +1,5 @@
 import React, {memo} from 'react';
-import Avatar from "@mui/material/Avatar";
+import {Component} from "./Component";
 
 const styles = {
     display: 'inline-block',
@@ -8,7 +8,9 @@ const styles = {
 }
 export const ComponentDragPreview = memo(function ComponentDragPreview({image}) {
     return (
-        <Avatar variant="square" src={image}
-                sx={styles} role={'ComponentPreview'}/>
+        <div style={styles}>
+            <Component image={image} preview/>
+        </div>
+
     )
 })

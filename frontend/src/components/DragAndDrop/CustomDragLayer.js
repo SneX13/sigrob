@@ -1,7 +1,7 @@
 import React from 'react';
 import {useDragLayer} from 'react-dnd';
 import {ComponentDragPreview} from './ComponentDragPreview';
-import {ItemTypes} from './simpleExample/ItemTypes.js';
+import {ItemTypes} from './ItemTypes.js';
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 
@@ -19,7 +19,7 @@ function getItemStyles(initialOffset, currentOffset) {
     }
 }
 
-export const CustomDragLayer = (props) => {
+export const CustomDragLayer = () => {
     const {itemType, isDragging, item, initialOffset, currentOffset} =
         useDragLayer((monitor) => ({
             item: monitor.getItem(),
