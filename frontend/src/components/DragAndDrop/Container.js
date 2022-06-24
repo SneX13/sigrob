@@ -56,7 +56,9 @@ export const Container = () => {
             top: 0,
         },
     })
+
     const [board, setBoard] = useState([])
+
     const moveComponent = useCallback(
         (id, left, top) => {
             setComponentsList(
@@ -77,8 +79,8 @@ export const Container = () => {
                 let left = Math.round(item.left + delta.x)
                 let top = Math.round(item.top + delta.y)
                 moveComponent(item.id, left, top)
-                addImage(item.id)
-                sendToBackend(item)
+                addImage(item)
+                // sendToBackend(item)
                 return undefined
             },
         }),
@@ -86,20 +88,31 @@ export const Container = () => {
     )
     const navigate = useNavigate()
 
-    const addImage = (id) => {
-        const droppedPictures = Object.fromEntries(
+    const addImage = (item) => {
+        const droppedComponent = Object.fromEntries(
             Object.entries(componentsList)
-                .filter(([key, value]) => key === id))
+                .filter(([key, value]) => key === item.id))
 
-        //setBoard(board => [...board, droppedPictures])
-        setBoard(droppedPictures)
-        console.log("DROPED PICS:", droppedPictures)
+        console.log("DROPPED IMG:", droppedComponent)
+
+        // setBoard(droppedComponent)
+        //setBoard(board => [...board, droppedComponent])
+
+        setBoard(prevState => {
+            const newState = prevState.map(obj => {
+                if (obj.id === item.id) {
+                    return {...obj, droppedComponent}
+                }
+                return obj;
+            });
+            return newState;
+        })
         console.log("BOARD IS, ", board)
 
     }
     const sendToBackend = async (component) => {
-        console.log(component)
-        console.log(component.name, component.image, component.left, component.top, systemId)
+        //console.log(component)
+        // console.log(component.name, component.image, component.left, component.top, systemId)
 
         /*  system: systemId,
               name:original_name,
@@ -108,17 +121,17 @@ export const Container = () => {
           y_position:top*/
         try {
             //const response = await createSystem({component}).unwrap();
-          /*apiSlice.injectEndpoints({
-                endpoints: builder => ({
-                    component: builder.mutation({
-                        query: componentData => ({
-                            url: '/api/login/',
-                            method: 'POST',
-                            body: { ...componentData }
-                        })
-                    }),
-                })
-            })*/
+            /*apiSlice.injectEndpoints({
+                  endpoints: builder => ({
+                      component: builder.mutation({
+                          query: componentData => ({
+                              url: '/api/login/',
+                              method: 'POST',
+                              body: { ...componentData }
+                          })
+                      }),
+                  })
+              })*/
             //dispatche something to store or not?
 
         } catch (err) {
