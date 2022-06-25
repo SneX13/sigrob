@@ -1,12 +1,34 @@
-from django import http
 from django.core.handlers.wsgi import WSGIRequest
 from django.http import HttpResponse, HttpResponseBadRequest
 from rest_framework.parsers import JSONParser
 from rest_framework.renderers import JSONRenderer
 from rest_framework.views import APIView
 
-from ..models import User, System
-from ..serializers import SystemSerializer
+from ..models import User, System, Component
+from ..serializers import SystemSerializer, ComponentSerializer
+
+
+class OneSystem(APIView):
+    @staticmethod
+    def get(request: WSGIRequest) -> HttpResponse:
+        get_id = "id"
+        try:
+            if request.body:
+                body = JSONParser().parse(request)
+                id_ = body.get(get_id)
+            else:
+                id_ = request.GET.get(get_id)
+        except KeyError:
+            return HttpResponseBadRequest(
+                "Get system request should contain the ID field of the system."
+            )
+        system = System.objects.get(id=id_)
+        system_components = Component.objects.filter(system=system)
+        system_serializer = SystemSerializer(system, many=False)
+        component_serializer = ComponentSerializer(system_components, many=True)
+        json_system = JSONRenderer().render(system_serializer.data)
+        json_components = JSONRenderer().render(component_serializer.data)
+        return HttpResponse(json_system + json_components)
 
 
 class SystemTable(APIView):
@@ -87,11 +109,9 @@ class SystemTable(APIView):
             return HttpResponseBadRequest(
                 f"System with ID '{system_data['id']}' does not exist in database."
             )
-        deleted_system_name = system.name
+        id_ = system_data['id']
         system.delete()
-        return HttpResponse(
-            f"Successfully deleted system '{deleted_system_name}'."
-        )
+        return HttpResponse('{"id":' + str(id_) + '}')
 
 
 class SystemControl(APIView):

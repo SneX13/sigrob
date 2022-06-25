@@ -8,7 +8,7 @@ from .models import System, Component, User
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = 'first_name', 'last_name', 'is_staff', 'company'
+        fields = 'id', 'first_name', 'last_name', 'is_staff', 'company'
 
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):

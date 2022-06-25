@@ -20,17 +20,27 @@ import {
 import {useState} from "react";
 import {useNavigate} from "react-router-dom";
 import DeleteSystemIcon from '@mui/icons-material/PriorityHigh';
+import {useDeleteSystemMutation} from "../../systems/systemsApiSlice";
+import {useSelector} from "react-redux";
+import {selectSystemById} from '../../systems/systemsApiSlice'
 
 export default function SystemCard(props) {
     const [deleteModal, setDeleteModal] = useState(false);
-    /*todo write this function*/
-    const updateSystem = (id) => {
-        console.log("UPDATE SYSTEM WITH ID; ", id)
-    };
+    const [deleteSystem] = useDeleteSystemMutation()
+    const system = props.system
 
-    const deleteSystem = (id) => {
-        console.log("DELETE SYSTEM WITH ID; ", id)
-    };
+    /*todo: finish the function*/
+    const onDeleteSystem = async () => {
+        try {
+            await deleteSystem({id: props.systemId}).unwrap()
+            //remove system from list
+            //show successfully deleted the system notification
+            setDeleteModal(false)
+        } catch (err) {
+            console.error('Failed to delete the system', err)
+        }
+    }
+
     const handleOpenDeleteModal = () => {
         setDeleteModal(true);
     };
@@ -44,13 +54,13 @@ export default function SystemCard(props) {
             <Card sx={{maxWidth: 345}}>
                 {/* todo: Pass props for all dynamic data: system name, subtitle, image, system id, etc */
                 }
-                <CardActionArea onClick={() => navigate(`/app/systems/${props.system.id}/`)}>
+                <CardActionArea onClick={() => navigate(`/systems/${props.systemId}/`)}>
                     <CardHeader
                         avatar={
                             <Avatar/>
                         }
-                        title={props.system.name}
-                        subheader={props.system.company ? props.system.company : 'Company Name missing'}
+                        title={system.name}
+                        subheader={system.company ? system.company : 'Company Name missing'}
                     />
                     <CardMedia>
                         {/*  todo: remove skeleton when there is a system image to show */}
@@ -66,7 +76,7 @@ export default function SystemCard(props) {
                 </CardActionArea>
                 {props.admin &&
                     <CardActions>
-                        <Button size="small" onClick={() => updateSystem(props.system.id)}>Edit</Button>
+                        <Button size="small" onClick={() => navigate(`/systems/edit/${props.systemId}`)}>Edit</Button>
                         <Button size="small" onClick={handleOpenDeleteModal}>Delete</Button>
                     </CardActions>
                 }
@@ -79,16 +89,16 @@ export default function SystemCard(props) {
             >
                 <DialogTitle id="alert-dialog-title" textAlign="center">
                     <DeleteSystemIcon color="error"/> <br/>
-                    {"Delete " + props.system.name + "?"}
+                    {"Delete " + system.name + "?"}
                 </DialogTitle>
                 <DialogContent>
                     <DialogContentText id="alert-dialog-description">
-                        You are about to permanently delete the {props.system.name}. This action can not be undone.
+                        You are about to permanently delete the {system.name}. This action can not be undone.
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions sx={{mb: 2}}>
                     <Button onClick={handleCloseDeleteModal} variant="outlined">Cancel</Button>
-                    <Button onClick={() => deleteSystem(props.system.id)} autoFocus variant="contained" color="error">
+                    <Button onClick={onDeleteSystem} autoFocus variant="contained" color="error">
                         Delete
                     </Button>
                 </DialogActions>
