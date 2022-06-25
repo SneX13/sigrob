@@ -1,6 +1,5 @@
-import React, {useState} from 'react';
-import {useSelector} from 'react-redux';
-import {selectSystemById} from '../../systems/systemsApiSlice'
+import React, {useEffect, useState} from 'react';
+
 import {useParams, useNavigate} from 'react-router-dom';
 import {createTheme, styled, ThemeProvider} from "@mui/material/styles";
 import Box from "@mui/material/Box";
@@ -13,61 +12,16 @@ import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
 import InfoIcon from "@mui/icons-material/InfoOutlined";
 import MuiAppBar from "@mui/material/AppBar";
-import MuiDrawer from "@mui/material/Drawer";
-import {useUpdateSystemMutation} from "../../systems/systemsApiSlice";
 import Link from "@mui/material/Link";
 import DragAndDrop from "../../components/DragAndDrop/DragAndDrop";
-import kuka from '../../../src/tempImg/svgs/kuka_robot.svg'
-import conveyer from '../../../src/tempImg/svgs/conveyer_belt.svg'
-import light from '../../../src/tempImg/svgs/yellow_light.svg'
+import {useSelector} from "react-redux";
+import {selectSystemById} from "../../systems/systemsApiSlice";
 
 const EditSystem = () => {
 
-    const [componentsList, setComponentsList] = useState([
-        {
-            id: 1,
-            name: 'Conveyor line',
-            image: conveyer,
-            x: null,
-            y: null,
-        },
-        {
-            id: 2,
-            name: 'KUKA robot',
-            image: kuka,
-            x: null,
-            y: null,
-        },
-        {
-            id: 3,
-            name: 'Light',
-            image: light,
-            x: null,
-            y: null,
-        },
-    ])
-    const {systemId} = useParams()
-    const navigate = useNavigate()
+    const {systemId} = useParams();
+    const navigate = useNavigate();
 
-    const [updateSystem, {isLoading}] = useUpdateSystemMutation()
-
-    const system = useSelector((state) => selectSystemById(state, Number(systemId)))
-
-    const [name, setName] = useState(system?.name)
-
-    const [components, setComponents] = useState(system?.components)
-
-    const onContentChanged = e => setComponents(e.target.value)
-
-    const saveSystem = async () => {
-        try {
-            await updateSystem({id: systemId, name, components}).unwrap()
-            navigate(`/systems/${systemId}`)
-        } catch (err) {
-            console.error('Failed to save the system', err)
-        }
-
-    }
     const drawerWidth = 240;
 
     const AppBar = styled(MuiAppBar, {
@@ -87,31 +41,6 @@ const EditSystem = () => {
             }),
         }),
     }));
-    const Drawer = styled(MuiDrawer, {shouldForwardProp: (prop) => prop !== 'open'})(
-        ({theme, open}) => ({
-            '& .MuiDrawer-paper': {
-                position: 'relative',
-                whiteSpace: 'nowrap',
-                width: drawerWidth,
-                transition: theme.transitions.create('width', {
-                    easing: theme.transitions.easing.sharp,
-                    duration: theme.transitions.duration.enteringScreen,
-                }),
-                boxSizing: 'border-box',
-                ...(!open && {
-                    overflowX: 'hidden',
-                    transition: theme.transitions.create('width', {
-                        easing: theme.transitions.easing.sharp,
-                        duration: theme.transitions.duration.leavingScreen,
-                    }),
-                    width: theme.spacing(7),
-                    [theme.breakpoints.up('sm')]: {
-                        width: theme.spacing(9),
-                    },
-                }),
-            },
-        }),
-    );
 
     const mdTheme = createTheme();
 
@@ -119,6 +48,8 @@ const EditSystem = () => {
     const toggleDrawer = () => {
         setOpen(!open);
     };
+    const system = useSelector((state) => selectSystemById(state, Number(systemId)))
+
     return (
 
         <ThemeProvider theme={mdTheme}>

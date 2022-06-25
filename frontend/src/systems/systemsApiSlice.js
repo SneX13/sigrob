@@ -1,9 +1,7 @@
 import {apiSlice} from "../services/apiSlice";
 import {createSelector, createEntityAdapter} from "@reduxjs/toolkit";
 
-/*Managing Normalizing Data with createEntityAdapter which accepts an options object that may include a sortComparer
-function, which will be used to keep the item IDs array in sorted order by comparing two items (and works the same way
-as Array.sort()).
+/*Managing Normalizing Data with createEntityAdapter.
 Read more here: https://redux.js.org/tutorials/essentials/part-6-performance-normalization#normalizing-data*/
 const systemsAdapter = createEntityAdapter();
 
@@ -11,21 +9,24 @@ const initialState = systemsAdapter.getInitialState()
 
 export const systemsApiSlice = apiSlice.injectEndpoints({
     endpoints: builder => ({
-      /*  getSystems: builder.mutation({
+        /*  getSystems: builder.mutation({
+              query: id => ({
+                  url: `/api/systems/?user=${id}`,
+                  method: 'GET',
+              }),
+              transformResponse: responseData => {
+                  const loadedSystems = responseData;
+                  return systemsAdapter.setAll(initialState, loadedSystems)
+              },
+              providesTags: (result, error, arg) => [
+                  ...result.ids.map(id => ({type: 'System', id}))
+              ]
+          }),*/
+        getSystems: builder.query({
             query: id => ({
                 url: `/api/systems/?user=${id}`,
                 method: 'GET',
             }),
-            transformResponse: responseData => {
-                const loadedSystems = responseData;
-                return systemsAdapter.setAll(initialState, loadedSystems)
-            },
-            providesTags: (result, error, arg) => [
-                ...result.ids.map(id => ({type: 'System', id}))
-            ]
-        }),*/
-        getSystems: builder.query({
-            query: id => `/api/systems/?user=${id}`,
             transformResponse: responseData => {
                 const loadedSystems = responseData;
                 return systemsAdapter.setAll(initialState, loadedSystems)
@@ -42,8 +43,9 @@ export const systemsApiSlice = apiSlice.injectEndpoints({
                     ...initialSystem,
                 }
             }),
-            invalidatesTags: [
-                {type: 'System', id: "LIST"}
+
+            invalidatesTags: (result, error, arg) => [
+                {type: 'System', id: arg.id}
             ]
         }),
         updateSystem: builder.mutation({
@@ -67,7 +69,7 @@ export const systemsApiSlice = apiSlice.injectEndpoints({
             invalidatesTags: (result, error, arg) => [
                 {type: 'System', id: arg.id}
             ]
-        })
+        }),
     })
 })
 

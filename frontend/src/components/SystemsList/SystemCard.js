@@ -33,8 +33,7 @@ export default function SystemCard(props) {
     const onDeleteSystem = async () => {
         try {
             await deleteSystem({id: props.systemId}).unwrap()
-            //remove system from list
-            //show successfully deleted the system notification
+            //todo: show successfully deleted the system notification
             setDeleteModal(false)
         } catch (err) {
             console.error('Failed to delete the system', err)

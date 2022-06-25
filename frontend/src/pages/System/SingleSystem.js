@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {useSelector} from 'react-redux'
 import {selectSystemById} from '../../systems/systemsApiSlice'
 import {useParams, useNavigate} from 'react-router-dom';
@@ -16,6 +16,7 @@ import Grid from "@mui/material/Grid";
 import InfoIcon from "@mui/icons-material/InfoOutlined";
 import MuiAppBar from "@mui/material/AppBar";
 import {selectCurrentUser} from "../../auth/authSlice";
+import SystemDataService from "../../services/api-helper"
 
 const SingleSystem = () => {
 
@@ -40,22 +41,38 @@ const SingleSystem = () => {
     const navigate = useNavigate();
     const {systemId} = useParams();
     const user = useSelector(selectCurrentUser)
-    const system = useSelector((state) => selectSystemById(state, Number(systemId)))
+    const [system, setSystem] = useState([]);
+
+    /* this should work with Redux but it is not working */
+    //const system = useSelector((state) => selectSystemById(state, Number(systemId)))
+
+    useEffect(() => {
+        getSystems();
+    }, [systemId]);
+
+    const getSystems = () => {
+        SystemDataService.getSystemWithComponents(Number(systemId))
+            .then(response => {
+                setSystem(response.data);
+            })
+            .catch(e => {
+                console.log(e);
+            });
+    };
 
     const [open, setOpen] = useState(true);
 
     const [openAlert, setOpenAlert] = useState(true);
     let content;
-    if (user.is_staff) {
-        content =
-            <section>
-                <p>Place for drag and drop frame.</p>
-            </section>
-    } else if (user.user_in_control !== user.id && user.user_in_control !== null) {
-        content = <p>Show system with request control button</p>
-    } else if (user.control_state === "no_controller" || user.user_in_control === null) {
-        content = <p>Show system with take control button</p>;
+
+    if (system.user_in_control !== user.id && system.user_in_control !== null) {
+        content = <p>User has a VIEWER role.Show system with REQUEST control button. </p>
+    } else if (system.user_in_control === user.id && system.control_state === 'single_controller') {
+        content = <p>User has a CONTROLLER role.Show system with STOP control button. </p>
+    } else if (system.control_state === "no_controller" && system.user_in_control === null) {
+        content = <p>User has a VIEWER role. Show system with TAKE CONTROL button</p>;
     }
+
 
     return (
         <ThemeProvider theme={mdTheme}>
