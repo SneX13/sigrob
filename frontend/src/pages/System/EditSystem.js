@@ -17,9 +17,9 @@ import MuiDrawer from "@mui/material/Drawer";
 import {useUpdateSystemMutation} from "../../systems/systemsApiSlice";
 import Link from "@mui/material/Link";
 import DragAndDrop from "../../components/DragAndDrop/DragAndDrop";
-import kuka from '../../../src/tempImg/kuka_robot.png'
-import conveyer from '../../../src/tempImg/conveyor_line.jpeg'
-import light from '../../../src/tempImg/light.png'
+import kuka from '../../../src/tempImg/svgs/kuka_robot.svg'
+import conveyer from '../../../src/tempImg/svgs/conveyer_belt.svg'
+import light from '../../../src/tempImg/svgs/yellow_light.svg'
 
 const EditSystem = () => {
 
