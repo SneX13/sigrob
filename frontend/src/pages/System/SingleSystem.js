@@ -4,7 +4,7 @@ import {selectSystemById} from '../../systems/systemsApiSlice'
 import {useParams, useNavigate} from 'react-router-dom';
 import {Alert, AppBar, Collapse, Stack} from "@mui/material";
 import Button from "@mui/material/Button";
-import {createTheme, styled, ThemeProvider} from "@mui/material/styles";
+import {createTheme, ThemeProvider} from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
@@ -14,28 +14,12 @@ import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
 import InfoIcon from "@mui/icons-material/InfoOutlined";
-import MuiAppBar from "@mui/material/AppBar";
 import {selectCurrentUser} from "../../auth/authSlice";
 import SystemDataService from "../../services/api-helper"
 import HMISystem from "../../components/HMI/HMISystem";
+import RequestControlModal from "../../components/Modals/RequestControlModal";
 
 const SingleSystem = () => {
-
-    const AppBar = styled(MuiAppBar, {
-        shouldForwardProp: (prop) => prop !== 'open',
-    })(({theme, open}) => ({
-        zIndex: theme.zIndex.drawer + 1,
-        transition: theme.transitions.create(['width', 'margin'], {
-            easing: theme.transitions.easing.sharp,
-            duration: theme.transitions.duration.leavingScreen,
-        }),
-        ...(open && {
-            transition: theme.transitions.create(['width', 'margin'], {
-                easing: theme.transitions.easing.sharp,
-                duration: theme.transitions.duration.enteringScreen,
-            }),
-        }),
-    }));
 
     const mdTheme = createTheme();
     const navigate = useNavigate();
@@ -45,6 +29,15 @@ const SingleSystem = () => {
     const [components, setComponents] = useState({});
     const [loading, setLoading] = useState(false);
     const [openAlert, setOpenAlert] = useState(true);
+    const [openModal, setModalOpen] = useState(false);
+    const handleOpenModal = () => {
+        setModalOpen(true);
+    };
+    const handleCloseModal = () => {
+        setModalOpen(false);
+        setLoading(false);
+    };
+
     /* this should work with Redux but it is not working */
     //const system = useSelector((state) => selectSystemById(state, Number(systemId)))
 
@@ -98,8 +91,8 @@ const SingleSystem = () => {
             user: user.id,
             id: systemId
         }
-        if(requestControl){
-            return
+        if (requestControl) {
+            return handleOpenModal();
         }
         SystemDataService.handleControlAction(actionUrl, data)
             .then(response => {
@@ -194,6 +187,7 @@ const SingleSystem = () => {
                         <HMISystem system={system} components={components}/>
                     </Container>
                 </Box>
+                <RequestControlModal open={openModal} close={() => handleCloseModal()}/>
             </Box>
         </ThemeProvider>
     )

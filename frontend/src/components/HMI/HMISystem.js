@@ -8,7 +8,7 @@ export default function HMISystem(props) {
     return (
         <Grid item xs={12}>
             <Typography variant="body1" gutterBottom>
-                System with connected components will appear here.
+                System {system.name} with connected components will appear here.
             </Typography>
             <List xs={6}>
                 {componentsList.map((item) => (

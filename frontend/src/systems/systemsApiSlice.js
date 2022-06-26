@@ -9,19 +9,6 @@ const initialState = systemsAdapter.getInitialState()
 
 export const systemsApiSlice = apiSlice.injectEndpoints({
     endpoints: builder => ({
-        /*  getSystems: builder.mutation({
-              query: id => ({
-                  url: `/api/systems/?user=${id}`,
-                  method: 'GET',
-              }),
-              transformResponse: responseData => {
-                  const loadedSystems = responseData;
-                  return systemsAdapter.setAll(initialState, loadedSystems)
-              },
-              providesTags: (result, error, arg) => [
-                  ...result.ids.map(id => ({type: 'System', id}))
-              ]
-          }),*/
         getSystems: builder.query({
             query: id => ({
                 url: `/api/systems/?user=${id}`,

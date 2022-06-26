@@ -19,7 +19,7 @@ import Button from "@mui/material/Button";
 import AddIcon from '@mui/icons-material/Add';
 import UserMenu from "../UserMenu/UserMenu";
 import SystemsList from "../SystemsList/SystemsList";
-import CreateNewSystemModal from "../Modal/CreateNewSystemModal";
+import CreateNewSystemModal from "../Modals/CreateNewSystemModal";
 import {useGetSystemsQuery,} from "../../systems/systemsApiSlice";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
