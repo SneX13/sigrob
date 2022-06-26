@@ -12,11 +12,10 @@ export default function HMISystem(props) {
             </Typography>
             <List xs={6}>
                 {componentsList.map((item) => (
-                    <ListItem key={item}>
+                    <ListItem key={item.id}>
                         <ListItemAvatar>
-                            <Avatar variant="square" alt={item.name} src={item.image}/>
+                            <img alt={item.name} src={require("../../tempImg/svgs/" + item.name + ".svg")}/>
                         </ListItemAvatar>
-                        <ListItemText primary={item.name}/>
                     </ListItem>
                 ))
                 }

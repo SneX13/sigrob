@@ -6,6 +6,7 @@ import {
 } from "@mui/material";
 import DeleteSystemIcon from '@mui/icons-material/PriorityHigh';
 import {useDeleteSystemMutation} from "../../systems/systemsApiSlice";
+import PrecisionManufacturingOutlinedIcon from '@mui/icons-material/PrecisionManufacturingOutlined';
 
 export default function SystemCard(props) {
     const [deleteModal, setDeleteModal] = useState(false);
@@ -36,7 +37,7 @@ export default function SystemCard(props) {
                 <CardActionArea onClick={() => navigate(`/systems/${props.systemId}/`)}>
                     <CardHeader
                         avatar={
-                            <Avatar/>
+                            <PrecisionManufacturingOutlinedIcon />
                         }
                         title={system.name}
                         subheader={system.company ? system.company : 'Company Name missing'}

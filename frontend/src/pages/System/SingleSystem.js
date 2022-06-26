@@ -57,7 +57,6 @@ const SingleSystem = () => {
             });
     };
 
-
     let content;
     let buttonText;
     let appBarColour;
