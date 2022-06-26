@@ -17,6 +17,7 @@ import InfoIcon from "@mui/icons-material/InfoOutlined";
 import MuiAppBar from "@mui/material/AppBar";
 import {selectCurrentUser} from "../../auth/authSlice";
 import SystemDataService from "../../services/api-helper"
+import HMISystem from "../../components/HMI/HMISystem";
 
 const SingleSystem = () => {
 
@@ -82,6 +83,8 @@ const SingleSystem = () => {
         appBarColour = "primary"
         content = <p>User has a VIEWER role. Show system with TAKE CONTROL button</p>;
     }
+    const canEdit = user.is_staff && (system.control_state === "no_controller" && system.user_in_control === null);
+
 
     return (
         <ThemeProvider theme={mdTheme}>
@@ -94,30 +97,34 @@ const SingleSystem = () => {
                         }}
                     >
                         <Stack direction="row" alignItems="center">
-                        <IconButton
-                            edge="start"
-                            color="inherit"
-                            aria-label="back"
-                            onClick={() => navigate(-1)}
-                            sx={{
-                                marginRight: '36px',
-                            }}
-                        >
-                            <ChevronLeftIcon/>
-                        </IconButton>
-                        <Typography
-                            component="h1"
-                            variant="h6"
-                            color="inherit"
-                            noWrap
-                            sx={{flexGrow: 1}}
-                        >
-                            {system.name}
-                        </Typography>
+                            <IconButton
+                                edge="start"
+                                color="inherit"
+                                aria-label="back"
+                                onClick={() => navigate(-1)}
+                                sx={{
+                                    marginRight: '36px',
+                                }}
+                            >
+                                <ChevronLeftIcon/>
+                            </IconButton>
+                            <Typography
+                                component="h1"
+                                variant="h6"
+                                color="inherit"
+                                noWrap
+                                sx={{flexGrow: 1}}
+                            >
+                                {system.name}
+                            </Typography>
                         </Stack>
                         <Button variant="outlined" sx={{
                             borderColor: 'white',
                             color: 'white',
+                            '&:hover': {
+                                borderColor: 'white',
+                                color: 'white',
+                            }
                         }}>
                             {buttonText}
                         </Button>
@@ -126,17 +133,13 @@ const SingleSystem = () => {
                 </AppBar>
                 <Box component="main"
                      sx={{
-                         backgroundColor: (theme) =>
-                             theme.palette.mode === 'light'
-                                 ? theme.palette.grey[100]
-                                 : theme.palette.grey[900],
                          flexGrow: 1,
                          paddingTop: '60px',
                          overflow: 'auto',
                      }}
                 >
                     <Container maxWidth="lg">
-                        {user.is_staff &&
+                        {canEdit &&
                             <Collapse in={openAlert}>
                                 <Alert severity="info" icon={false}
                                        action={
@@ -162,7 +165,7 @@ const SingleSystem = () => {
                             </Grid>
                         }
                         {content}
-
+                        <HMISystem system={system} components={components}/>
                     </Container>
                 </Box>
             </Box>

@@ -55,7 +55,7 @@ const EditSystem = () => {
         <ThemeProvider theme={mdTheme}>
 
             <Box sx={{display: 'flex'}}>
-                <AppBar position="absolute" open={!system ? open : !open}>
+                <AppBar position="absolute" open={!open}>
                     <Toolbar
                         sx={{
                             pr: '24px', // keep right padding when drawer closed
@@ -80,17 +80,13 @@ const EditSystem = () => {
                             noWrap
                             sx={{flexGrow: 1}}
                         >
-                            {system ? system.name : "System Name Undefined"}
+                            {system ? system.name : "System name"}
                         </Typography>
                         <UserMenu/>
                     </Toolbar>
                 </AppBar>
                 <Box component="main"
                      sx={{
-                         backgroundColor: (theme) =>
-                             theme.palette.mode === 'light'
-                                 ? theme.palette.grey[100]
-                                 : theme.palette.grey[900],
                          flexGrow: 1,
                          paddingTop: '60px',
                          overflow: 'auto',
