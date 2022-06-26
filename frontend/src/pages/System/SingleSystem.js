@@ -103,6 +103,7 @@ const SingleSystem = () => {
             });
     };
 
+    const userName = user.first_name + ' ' + user.last_name;
 
     return (
         <ThemeProvider theme={mdTheme}>
@@ -186,7 +187,8 @@ const SingleSystem = () => {
                         <HMISystem system={system} components={components}/>
                     </Container>
                 </Box>
-                <RequestControlModal open={openModal} close={() => handleCloseModal()}/>
+                <RequestControlModal open={openModal} close={() => handleCloseModal()} user={userName}
+                                     system={system.name}/>
             </Box>
         </ThemeProvider>
     )
