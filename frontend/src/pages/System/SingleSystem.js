@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 import {useSelector} from 'react-redux'
 import {selectSystemById} from '../../systems/systemsApiSlice'
 import {useParams, useNavigate} from 'react-router-dom';
-import {Alert, AppBar, Collapse} from "@mui/material";
+import {Alert, AppBar, Collapse, Stack} from "@mui/material";
 import Button from "@mui/material/Button";
 import {createTheme, styled, ThemeProvider} from "@mui/material/styles";
 import Box from "@mui/material/Box";
@@ -41,8 +41,8 @@ const SingleSystem = () => {
     const navigate = useNavigate();
     const {systemId} = useParams();
     const user = useSelector(selectCurrentUser)
-    const [system, setSystem] = useState([]);
-
+    const [system, setSystem] = useState({});
+    const [components, setComponents] = useState({});
     /* this should work with Redux but it is not working */
     //const system = useSelector((state) => selectSystemById(state, Number(systemId)))
 
@@ -53,7 +53,9 @@ const SingleSystem = () => {
     const getSystems = () => {
         SystemDataService.getSystemWithComponents(Number(systemId))
             .then(response => {
-                setSystem(response.data);
+                setSystem(response.data[0]);
+                const componentsData = response.data.slice(1)
+                setComponents(componentsData)
             })
             .catch(e => {
                 console.log(e);
@@ -64,25 +66,34 @@ const SingleSystem = () => {
 
     const [openAlert, setOpenAlert] = useState(true);
     let content;
+    let buttonText;
+    let appBarColour;
 
     if (system.user_in_control !== user.id && system.user_in_control !== null) {
+        buttonText = "Request Control"
+        appBarColour = "warning"
         content = <p>User has a VIEWER role.Show system with REQUEST control button. </p>
     } else if (system.user_in_control === user.id && system.control_state === 'single_controller') {
+        buttonText = "Stop Controlling";
+        appBarColour = "success"
         content = <p>User has a CONTROLLER role.Show system with STOP control button. </p>
     } else if (system.control_state === "no_controller" && system.user_in_control === null) {
+        buttonText = "Take Control"
+        appBarColour = "primary"
         content = <p>User has a VIEWER role. Show system with TAKE CONTROL button</p>;
     }
-
 
     return (
         <ThemeProvider theme={mdTheme}>
             <Box sx={{display: 'flex'}}>
-                <AppBar position="absolute" open={!open}>
+                <AppBar position="absolute" open={!open} color={appBarColour}>
                     <Toolbar
                         sx={{
+                            justifyContent: "space-between",
                             pr: '24px', // keep right padding when drawer closed
                         }}
                     >
+                        <Stack direction="row" alignItems="center">
                         <IconButton
                             edge="start"
                             color="inherit"
@@ -101,8 +112,15 @@ const SingleSystem = () => {
                             noWrap
                             sx={{flexGrow: 1}}
                         >
-                            NAME UNDEFINED
+                            {system.name}
                         </Typography>
+                        </Stack>
+                        <Button variant="outlined" sx={{
+                            borderColor: 'white',
+                            color: 'white',
+                        }}>
+                            {buttonText}
+                        </Button>
                         <UserMenu/>
                     </Toolbar>
                 </AppBar>
@@ -128,7 +146,7 @@ const SingleSystem = () => {
                                            </Button>
                                        }
                                 >
-                                    You are viewing NAME UNDEFINED. You can edit the system by clicking the Edit button.
+                                    You are viewing {system.name}. You can edit the system by clicking the Edit button.
                                 </Alert>
                             </Collapse>
                         }

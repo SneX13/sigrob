@@ -26,9 +26,9 @@ class OneSystem(APIView):
         system_components = Component.objects.filter(system=system)
         system_serializer = SystemSerializer(system, many=False)
         component_serializer = ComponentSerializer(system_components, many=True)
-        json_system = JSONRenderer().render(system_serializer.data)
-        json_components = JSONRenderer().render(component_serializer.data)
-        return HttpResponse(json_system + json_components)
+        combined_data = [system_serializer.data] + component_serializer.data
+        json_data = JSONRenderer().render(combined_data)
+        return HttpResponse(json_data)
 
 
 class SystemTable(APIView):
