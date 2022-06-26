@@ -37,13 +37,14 @@ const SingleSystem = () => {
         }),
     }));
 
-
     const mdTheme = createTheme();
     const navigate = useNavigate();
     const {systemId} = useParams();
     const user = useSelector(selectCurrentUser)
     const [system, setSystem] = useState({});
     const [components, setComponents] = useState({});
+    const [loading, setLoading] = useState(false);
+    const [openAlert, setOpenAlert] = useState(true);
     /* this should work with Redux but it is not working */
     //const system = useSelector((state) => selectSystemById(state, Number(systemId)))
 
@@ -63,33 +64,58 @@ const SingleSystem = () => {
             });
     };
 
-    const [open, setOpen] = useState(true);
 
-    const [openAlert, setOpenAlert] = useState(true);
     let content;
     let buttonText;
     let appBarColour;
+    let actionUrl;
 
-    if (system.user_in_control !== user.id && system.user_in_control !== null) {
-        buttonText = "Request Control"
-        appBarColour = "warning"
-        content = <p>User has a VIEWER role.Show system with REQUEST control button. </p>
-    } else if (system.user_in_control === user.id && system.control_state === 'single_controller') {
+    const requestControl = system.user_in_control !== user.id && system.user_in_control !== null;
+    const userInControl = system.user_in_control === user.id && system.control_state === 'single_controller';
+    const takeControl = system.control_state === "no_controller" && system.user_in_control === null;
+
+    if (requestControl) {
+        buttonText = "Request Control";
+        appBarColour = "warning";
+        actionUrl = "http://localhost:8000/api/systems/control/transfer";
+        content = <p>User has a VIEWER role.Show system with REQUEST control button. </p>;
+    } else if (userInControl) {
         buttonText = "Stop Controlling";
-        appBarColour = "success"
+        appBarColour = "success";
+        actionUrl = "http://localhost:8000/api/systems/control/release";
         content = <p>User has a CONTROLLER role.Show system with STOP control button. </p>
-    } else if (system.control_state === "no_controller" && system.user_in_control === null) {
+    } else if (takeControl) {
         buttonText = "Take Control"
         appBarColour = "primary"
+        actionUrl = "http://localhost:8000/api/systems/control/request";
         content = <p>User has a VIEWER role. Show system with TAKE CONTROL button</p>;
     }
     const canEdit = user.is_staff && (system.control_state === "no_controller" && system.user_in_control === null);
+
+    const handleSinglePointOfControl = () => {
+        setLoading(true)
+        const data = {
+            user: user.id,
+            id: systemId
+        }
+        if(requestControl){
+            return
+        }
+        SystemDataService.handleControlAction(actionUrl, data)
+            .then(response => {
+                getSystems();
+                setLoading(false)
+            })
+            .catch(e => {
+                console.log(e);
+            });
+    };
 
 
     return (
         <ThemeProvider theme={mdTheme}>
             <Box sx={{display: 'flex'}}>
-                <AppBar position="absolute" open={!open} color={appBarColour}>
+                <AppBar position="absolute" color={appBarColour}>
                     <Toolbar
                         sx={{
                             justifyContent: "space-between",
@@ -118,14 +144,14 @@ const SingleSystem = () => {
                                 {system.name}
                             </Typography>
                         </Stack>
-                        <Button variant="outlined" sx={{
+                        <Button variant="outlined" disabled={loading} sx={{
                             borderColor: 'white',
                             color: 'white',
                             '&:hover': {
                                 borderColor: 'white',
                                 color: 'white',
                             }
-                        }}>
+                        }} onClick={handleSinglePointOfControl}>
                             {buttonText}
                         </Button>
                         <UserMenu/>
