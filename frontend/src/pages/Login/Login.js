@@ -14,6 +14,8 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import {createTheme, ThemeProvider} from '@mui/material/styles';
 import {Alert, CircularProgress} from "@mui/material";
+import {systemsApiSlice} from "../../systems/systemsApiSlice";
+import {store} from "../../store/store";
 
 const theme = createTheme();
 
@@ -46,17 +48,18 @@ const Login = () => {
             dispatch(setCredentials({user: userData[0]}));
             setUser('');
             setPassword('');
+            dispatch(systemsApiSlice.endpoints.getSystems.initiate(userData[0].id));
             userData[0].is_staff ? navigate("/admin") : navigate("/user");
             setLoading(false)
         } catch (err) {
             if (!err?.originalStatus) {
-                setErrMsg('No Server Response');
+                setErrMsg('No Server Response.');
             } else if (err.originalStatus === 400) {
-                setErrMsg('Missing Username or Password');
+                setErrMsg('Missing Username or Password.');
             } else if (err.originalStatus === 401) {
-                setErrMsg('Unauthorized');
+                setErrMsg('Unauthorized.');
             } else {
-                setErrMsg('Login Failed');
+                setErrMsg('Login Failed. ' + err.data);
             }
             errRef.current.focus();
         }

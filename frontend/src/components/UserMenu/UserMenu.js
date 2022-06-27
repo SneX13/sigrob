@@ -14,7 +14,6 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import {useNavigate} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {logOut, selectCurrentUser} from "../../auth/authSlice";
-import {selectAvailableSystems} from "../../systems/systemsSlice";
 
 export default function UserMenu(props) {
     const [anchorEl, setAnchorEl] = React.useState(null);

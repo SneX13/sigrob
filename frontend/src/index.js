@@ -3,11 +3,10 @@ import {Provider} from "react-redux";
 import {createRoot} from "react-dom/client";
 import {BrowserRouter, Routes, Route} from "react-router-dom";
 import App from './App';
-import { store } from './store/store'
+import {store} from './store/store'
 
 import reportWebVitals from './reportWebVitals';
 import '@fontsource/roboto';
-
 
 const rootElement = document.getElementById("root");
 const root = createRoot(rootElement);

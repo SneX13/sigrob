@@ -5,26 +5,27 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import {Alert, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle} from "@mui/material";
 import {useNavigate} from "react-router-dom";
+import {useAddNewSystemMutation} from "../../systems/systemsApiSlice";
 
 export default function CreateNewSystemModal(props) {
     const navigate = useNavigate();
-    const errRef = useRef();
     const [name, setName] = useState("");
     const [loading, setLoading] = useState(false);
     const [errMsg, setErrMsg] = useState('');
+    const [addNewSystem] = useAddNewSystemMutation();
 
     useEffect(() => {
         setErrMsg('')
     }, [name])
 
-    const handleSubmit = async (event) => {
-        event.preventDefault();
+    const handleSubmit = async () => {
         setLoading(true)
         try {
-            // const systemData = await create(name).unwrap();
-            setName('');
-            //navigate(`/systems/${id}/`);
-            setLoading(false)
+            const response = await addNewSystem({name, company: 1}).unwrap()
+            setName('')
+            // todo: add notification successfully added the system
+
+            navigate(`/systems/edit/${response.id}`)
         } catch (err) {
             if (!err?.originalStatus) {
                 setErrMsg('No Server Response');
@@ -35,11 +36,10 @@ export default function CreateNewSystemModal(props) {
             } else {
                 setErrMsg('Create System Failed');
             }
-            errRef.current.focus();
         }
-    };
-    const handleNameInput = (e) => setName(e.target.value);
+    }
 
+    const handleNameInput = (e) => setName(e.target.value);
 
     return (
         <div>
