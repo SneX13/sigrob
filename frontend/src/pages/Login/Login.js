@@ -48,7 +48,7 @@ const Login = () => {
             dispatch(setCredentials({user: userData[0]}));
             setUser('');
             setPassword('');
-            store.dispatch(systemsApiSlice.endpoints.getSystems.initiate(userData[0].id));
+            dispatch(systemsApiSlice.endpoints.getSystems.initiate(userData[0].id));
             userData[0].is_staff ? navigate("/admin") : navigate("/user");
             setLoading(false)
         } catch (err) {

@@ -1,40 +1,22 @@
-import * as React from 'react';
-import Card from '@mui/material/Card';
-import CardHeader from '@mui/material/CardHeader';
-import CardMedia from '@mui/material/CardMedia';
-import CardContent from '@mui/material/CardContent';
-import CardActions from '@mui/material/CardActions';
-import Avatar from '@mui/icons-material/PrecisionManufacturingOutlined';
-import Typography from '@mui/material/Typography';
-import Button from "@mui/material/Button";
-import {
-    CardActionArea,
-    Dialog,
-    DialogActions,
-    DialogContent,
-    DialogContentText,
-    DialogTitle,
-    Skeleton,
-    Stack
-} from "@mui/material";
-import {useState} from "react";
+import React, {useState} from 'react';
 import {useNavigate} from "react-router-dom";
+import {
+    Avatar, Button, Card, CardHeader, CardMedia, CardActions, CardContent, CardActionArea, Dialog, DialogActions,
+    DialogContent, DialogContentText, DialogTitle, Skeleton, Stack, Typography
+} from "@mui/material";
 import DeleteSystemIcon from '@mui/icons-material/PriorityHigh';
 import {useDeleteSystemMutation} from "../../systems/systemsApiSlice";
-import {useSelector} from "react-redux";
-import {selectSystemById} from '../../systems/systemsApiSlice'
+import PrecisionManufacturingOutlinedIcon from '@mui/icons-material/PrecisionManufacturingOutlined';
 
 export default function SystemCard(props) {
     const [deleteModal, setDeleteModal] = useState(false);
     const [deleteSystem] = useDeleteSystemMutation()
     const system = props.system
 
-    /*todo: finish the function*/
     const onDeleteSystem = async () => {
         try {
             await deleteSystem({id: props.systemId}).unwrap()
-            //remove system from list
-            //show successfully deleted the system notification
+            //todo: show successfully deleted the system notification
             setDeleteModal(false)
         } catch (err) {
             console.error('Failed to delete the system', err)
@@ -52,12 +34,10 @@ export default function SystemCard(props) {
     return (
         <div>
             <Card sx={{maxWidth: 345}}>
-                {/* todo: Pass props for all dynamic data: system name, subtitle, image, system id, etc */
-                }
                 <CardActionArea onClick={() => navigate(`/systems/${props.systemId}/`)}>
                     <CardHeader
                         avatar={
-                            <Avatar/>
+                            <PrecisionManufacturingOutlinedIcon />
                         }
                         title={system.name}
                         subheader={system.company ? system.company : 'Company Name missing'}
@@ -104,6 +84,5 @@ export default function SystemCard(props) {
                 </DialogActions>
             </Dialog>
         </div>
-
     );
 }

@@ -19,10 +19,12 @@ export default function CreateNewSystemModal(props) {
     }, [name])
 
     const handleSubmit = async () => {
+        setLoading(true)
         try {
             const response = await addNewSystem({name, company: 1}).unwrap()
             setName('')
             // todo: add notification successfully added the system
+
             navigate(`/systems/edit/${response.id}`)
         } catch (err) {
             if (!err?.originalStatus) {
