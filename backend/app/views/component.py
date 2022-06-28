@@ -1,4 +1,3 @@
-from django import http
 from django.core.handlers.wsgi import WSGIRequest
 from django.http import HttpResponse, HttpResponseBadRequest
 from rest_framework.parsers import JSONParser
@@ -24,9 +23,7 @@ class ComponentTable(APIView):
                 "Component request should contain the ID of its system."
             )
         components = Component.objects.filter(system=id_)
-        component_serializer = ComponentSerializer(components, many=True)
-        json_data = JSONRenderer().render(component_serializer.data)
-        return HttpResponse(json_data)
+        return component_data_response(*components)
 
     @staticmethod
     def post(request: WSGIRequest) -> HttpResponse:
@@ -132,6 +129,16 @@ class ComponentControl(APIView):
         else:
             raise NotImplementedError
         component.atomic_save()
-        component_serializer = ComponentSerializer(component, many=False)
-        json_data = JSONRenderer().render(component_serializer.data)
-        return HttpResponse(json_data)
+        return component_data_response(component)
+
+
+def component_data_response(*components: Component) -> HttpResponse:
+    if len(components) > 1:
+        many = True
+        data = components
+    else:
+        many = False
+        data = components[0]
+    component_serializer = ComponentSerializer(data, many=many)
+    json_data = JSONRenderer().render(component_serializer.data)
+    return HttpResponse(json_data)
