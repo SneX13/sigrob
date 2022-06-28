@@ -6,17 +6,16 @@ from django_fsm import FSMField, transition, ConcurrentTransitionMixin
 
 class Company(models.Model):
     name = models.CharField(max_length=255, unique=True)
-    logo = models.ImageField(upload_to="images/", default=None, null=True)
+    logo = models.ImageField(upload_to="resources/logos/", default=None, null=True)
 
     def __str__(self):
         return self.name
 
 
 class UserManager(BaseUserManager):
-    # A custom user manager to be able to add user with email authentication from:
+    # A custom user manager to add user with email authentication from:
+    # https://koenwoortman.com/python-django-email-as-username/
 
-    # https://koenwoortman.com/python-django-email-as-username/#:~:text=By%20default%
-    # 20these%20Django%20users,migrations%20for%20the%20first%20time.
     use_in_migration = True
 
     def _create_user(self, email, password, **extra_fields):
@@ -107,15 +106,15 @@ class System(ConcurrentTransitionMixin, models.Model):
         target=STATE.SINGLE_CONTROLLER,
     )
     def acquire_system_control(self):
-        ...
+        pass
 
     @transition(
         field=control_state,
-        source=STATE.SINGLE_CONTROLLER,
+        source=[STATE.SINGLE_CONTROLLER, STATE.CONTROL_CHANGE_REQUEST],
         target=STATE.NO_CONTROLLER,
     )
     def release_system_control(self):
-        ...
+        pass
 
     @transition(
         field=control_state,
@@ -123,7 +122,7 @@ class System(ConcurrentTransitionMixin, models.Model):
         target=STATE.CONTROL_CHANGE_REQUEST,
     )
     def request_control_from_user(self):
-        ...
+        pass
 
     @transition(
         field=control_state,
@@ -131,7 +130,7 @@ class System(ConcurrentTransitionMixin, models.Model):
         target=STATE.SINGLE_CONTROLLER,
     )
     def transfer_control_to_user(self):
-        ...
+        pass
 
 
 class Component(models.Model):
@@ -175,7 +174,7 @@ class Component(models.Model):
         target=STATE.RUNNING,
     )
     def start(self):
-        ...
+        pass
 
     @transition(
         field=state,
@@ -183,7 +182,7 @@ class Component(models.Model):
         target=STATE.IDLE,
     )
     def stop(self):
-        ...
+        pass
 
     @transition(
         field=state,
@@ -191,7 +190,7 @@ class Component(models.Model):
         target=STATE.IDLE,
     )
     def reset(self):
-        ...  # Set origin/initial positions here
+        pass  # Set origin/initial positions here
 
     @transition(
         field=state,
@@ -199,7 +198,7 @@ class Component(models.Model):
         target=STATE.AUTOMATIC,
     )
     def auto_mode(self):
-        ...
+        pass
 
     @transition(
         field=state,
@@ -207,7 +206,7 @@ class Component(models.Model):
         target=STATE.ERROR,
     )
     def error_mode(self):
-        ...
+        pass
 
     def __str__(self):
         return f'{self.system} | {self.name}'
