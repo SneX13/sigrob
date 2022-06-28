@@ -26,7 +26,13 @@ class OneSystem(APIView):
         system_components = Component.objects.filter(system=system)
         system_serializer = SystemSerializer(system, many=False)
         component_serializer = ComponentSerializer(system_components, many=True)
-        combined_data = [system_serializer.data] + component_serializer.data
+        system_data = system_serializer.data
+        if system.user_in_control is not None:
+            name = system.user_in_control.full_name
+        else:
+            name = ""
+        system_data["user_name"] = name
+        combined_data = [system_data] + component_serializer.data
         json_data = JSONRenderer().render(combined_data)
         return HttpResponse(json_data)
 
