@@ -1,2 +1,6 @@
 # sigrob
-Signal control for robot system is bachelor thesis project at NTNU (spring 2022). It is a HMI (Human-Machine Interface) display solution used to control the robots.
+This is the bachelor thesis "_User Interface Design for Industrail Control Systems_" project at NTNU (spring 2022). 
+
+It is Graphical User Interface (GUI) solution for an HMI (Human-Machine Interface) display used to control the robots.
+
+SIGROB is shortened name because the original title of the thesis was "_Signal control for robot system_". 
